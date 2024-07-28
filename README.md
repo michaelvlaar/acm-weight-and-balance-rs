@@ -2,6 +2,6 @@
 
 ## Features
 
-- [] Save as PDF on device with date and time
-- [] Show calculations table
-- [] Show document references (which documents / versions)
+- [ ] Save as PDF on device with date and time
+- [x] Show calculations table
+- [ ] Show document references (which documents / versions
