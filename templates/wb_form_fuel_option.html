@@ -1,0 +1,19 @@
+
+<div class="flex space-x-2" id="fuel-option">
+{% if fuel_option == "manual" %}
+    <input type="number" min="0" max="110" step=".1" id="brandstof-gewicht" {% if fuel_quantity %}value="{{ fuel_quantity }}"{% endif %} name="fuel_quantity" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+{% endif %}
+<select id="brandstof-type" name="fuel_type" class="custom-select shadow appearance-none border rounded {% if fuel_option == "manual" %}{% else %}{% endif %} px-3 py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+    <option value="mogas" {% if fuel_type is defined and fuel_type == "mogas" %}selected{% endif %}>Mogas</option>
+    <option value="avgas" {% if fuel_type is defined and fuel_type == "avgas" %}selected{% endif %}>Avgas</option>
+</select>
+<select id="brandstof-eenheid" name="fuel_quantity_type" class="custom-select shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+    <option value="liter" {% if fuel_quantity_type is defined and fuel_quantity_type == "liter" %}selected{% endif %}>Liters</option>
+    <option value="gallon" {% if fuel_quantity_type is defined and fuel_quantity_type == "gallon" %}selected{% endif %}>Gallons</option>
+</select>
+{% if fuel_option == "auto" %}
+    {% if fuel_quantity is defined and fuel_quantity > 0 %}
+        <input type="hidden" name="fuel_quantity" {% if fuel_quantity %}value="{{ fuel_quantity }}"{% endif %}>
+    {% endif %}
+{% endif %}
+</div>

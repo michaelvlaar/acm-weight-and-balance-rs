@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gewicht en Balans Aquila A210</title>
+    <script src="https://unpkg.com/htmx.org@2.0.1"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .custom-select {
+            appearance: none;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding-right: 2.5rem; /* Room for the arrow */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.5rem;
+        },
+        .vertical-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flex-grow-container {
+            flex-grow: 1;
+            display: flex;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded shadow-md flex flex-col items-center lg:items-stretch">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold">Gewicht en Balans Aquila A210</h1>
+        </div>
+        <div class="flex flex-col lg:flex-row lg:items-stretch w-full">
+            {% include "wb_form.html" %}
+            <div id="wb-image-container" class="flex-grow flex items-center justify-center">
+                <p class="text-center text-gray-700 text-lg font-semibold max-w-lg"> Vul het formulier in en klik op "Bereken Gewicht en Balans" om het gewicht en balans te visualiseren.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
