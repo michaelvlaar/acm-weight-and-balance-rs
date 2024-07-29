@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "acm_weight_and_balance"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "actix-web",
  "airplane",
@@ -235,8 +235,6 @@ dependencies = [
 [[package]]
 name = "airplane"
 version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba285ee4852db0080cbac9f1173e01aac4ec45a3cfe962f640b8cb833a37f94a"
 dependencies = [
  "plotters",
 ]

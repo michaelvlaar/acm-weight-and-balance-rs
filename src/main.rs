@@ -14,8 +14,8 @@ use tera::Tera;
 struct IndexQueryParams {
     callsign: Option<String>,
     pilot: Option<f64>,
-    passenger: Option<f64>,
-    bagage: Option<f64>,
+    passenger: Option<String>,
+    bagage: Option<String>,
     fuel_option: Option<String>,
     fuel_quantity: Option<String>,
     fuel_type: Option<String>,
@@ -47,6 +47,7 @@ async fn print(
         &format!("/wb-chart?{}", req.query_string()),
     );
     let document_reference = query.reference.clone();
+
     let (
         callsign,
         pilot,
@@ -70,10 +71,14 @@ async fn print(
     );
 
     ctx.insert("wb_table", &weight_and_balance_table_strings(plane));
-    ctx.insert("document_reference", &document_reference.unwrap_or_default());
+    ctx.insert(
+        "document_reference",
+        &document_reference.unwrap_or_default(),
+    );
     ctx.insert("print", &true);
 
     let rendered = tmpl.render("print.html", &ctx).unwrap();
+
     HttpResponse::Ok().content_type("text/html").body(rendered)
 }
 
@@ -288,10 +293,16 @@ fn parse_query(
     let query_params = query.into_inner();
     let callsign = query_params.callsign.expect("calsign must be present.");
     let pilot = query_params.pilot.expect("pilot should be present.");
-    let passenger = query_params
+    let passenger: f64 = query_params
         .passenger
-        .expect("passenger should be present.");
-    let baggage = query_params.bagage.expect("bagage should be present.");
+        .unwrap_or_default()
+        .parse()
+        .unwrap_or_default();
+    let baggage: f64 = query_params
+        .bagage
+        .unwrap_or_default()
+        .parse()
+        .unwrap_or_default();
     let fuel_quantity: f64 = query_params
         .fuel_quantity
         .unwrap_or_default()

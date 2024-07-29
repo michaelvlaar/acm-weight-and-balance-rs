@@ -13,12 +13,12 @@
 
     <div class="mb-4">
         <label for="passagier-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Passagier (kg)</label>
-        <input type="number" min="0" placeholder="Gewicht passagier in kg" id="passagier-gewicht" {% if passenger %}value="{{ passenger }}"{% endif %} name="passenger" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <input type="number" min="0" placeholder="Gewicht passagier in kg" id="passagier-gewicht" {% if passenger %}value="{{ passenger }}"{% endif %} name="passenger" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" >
     </div>
 
     <div class="mb-4">
         <label for="bagage-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Bagage (kg, max. 40)</label>
-        <input type="number" min="0" max="40" placeholder="Gewicht bagage in kg" id="bagage-gewicht" {% if baggage %}value="{{ baggage }}"{% endif %} name="bagage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <input type="number" min="0" max="40" placeholder="Gewicht bagage in kg" id="bagage-gewicht" {% if baggage %}value="{{ baggage }}"{% endif %} name="bagage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
     <div class="mb-4" >
@@ -43,22 +43,19 @@
             Sommige gegevens zijn verborgen vanwege beperkte ruimte. Draai uw apparaat naar landschapsmodus om alle informatie te bekijken.
         </p>
     </div>
-    <form class="flex w-full flex-col" id="print-form">
-        <div class="text-center mt-4">
-            <h1 class="text-2xl font-bold">Exporteren</h1>
-        </div>
-        <div class="mb-4 w-full mt-4">
-                <label for="export-name" class="uppercase block text-gray-700 font-bold mb-2">Document Referentie</label>
-                <input required type="string" placeholder="Document referentie" id="export-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-        </div>
-        <div class="flex w-full mt-2 items-center justify-between">
-            <input value="Opslaan als PDF" type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            <iframe id="print-frame" style="display: none;"></iframe>
-        </div>
-        </form>
-        <script>
-        document.getElementById('print-form').addEventListener('submit', function(event) { 
-            event.preventDefault();
+    <div class="text-center mt-4">
+        <h1 class="text-2xl font-bold">Exporteren</h1>
+    </div>
+    <div class="mb-4 w-full mt-4">
+            <label for="export-name" class="uppercase block text-gray-700 font-bold mb-2">Document Referentie</label>
+            <input required type="string" placeholder="Document referentie" id="export-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+    </div>
+    <div class="flex w-full mt-2 items-center justify-between">
+        <input id="btn-print" value="Print / Opslaan als PDF" name="action" type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+    </div>
+    <iframe id="print-frame" style="display: none;"></iframe>
+    <script>
+        document.getElementById('btn-print').addEventListener('click', function(event) { 
             const iframe = document.getElementById('print-frame');
               iframe.src = '{{ print_url | safe }}&' + 'reference=' + document.getElementById("export-name").value;
 
@@ -67,7 +64,7 @@
             };
           }
         );
-        </script>
+    </script>
     {% endif %}
 </div>
 {% endif %}
