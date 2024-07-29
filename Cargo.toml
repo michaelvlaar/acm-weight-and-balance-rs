@@ -4,7 +4,7 @@ version = "0.1.2"
 edition = "2021"
 
 [dependencies]
-airplane = "0.1.4" 
+airplane = "0.1.5" 
 actix-web = "4"
 tera = "1.12"
 serde = { version = "1.0", features = ["derive"] }

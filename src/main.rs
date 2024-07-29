@@ -1,7 +1,9 @@
 use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use airplane::{
-    visualizer::WeightBalanceChartVisualization,
-    visualizer::WeightBalanceTableVisualization,
+    visualizer::{
+        weight_and_balance_table_strings, WeightBalanceChartVisualization,
+        WeightBalanceTableVisualization,
+    },
     weight_and_balance::{Airplane, CenterOfGravity, LeverArm, Limits, Mass, Moment, Volume},
 };
 use rust_embed::RustEmbed;
@@ -30,7 +32,7 @@ struct FuelOptionQueryParams {
 
 #[derive(RustEmbed)]
 #[folder = "templates/"]
-struct Asset;
+struct Templates;
 
 async fn index(
     query: web::Query<IndexQueryParams>,
@@ -94,14 +96,17 @@ async fn index(
 
         ctx.insert(
             "fuel_quantity",
-            &format!("{:.1}", quantity).parse::<f64>().unwrap(),
+            &format!("{:.2}", quantity).parse::<f64>().unwrap(),
         );
         ctx.insert("fuel_type", &fuel_type);
         ctx.insert("fuel_quantity_type", &fuel_quantity_type);
         ctx.insert("fuel_option", "manual");
 
-        ctx.insert("wb_chart_image_url", &format!("/wb-chart?{}", req.query_string()));
-        ctx.insert("wb_table_image_url", &format!("/wb-table?{}", req.query_string()));
+        ctx.insert(
+            "wb_chart_image_url",
+            &format!("/wb-chart?{}", req.query_string()),
+        );
+        ctx.insert("wb_table", &weight_and_balance_table_strings(plane));
         "wb_form.html"
     } else {
         ctx.insert("show_image", &false);
@@ -206,6 +211,7 @@ fn build_plane(
                 }),
                 _ => panic!("invalid fuel type"),
             },
+            Some(Volume::Liter(110.0)),
         );
     } else {
         let fuel_volume = match fuel_quantity_type.as_str() {
@@ -267,7 +273,6 @@ fn parse_query(
     )
 }
 
-
 async fn wb_table(query: web::Query<IndexQueryParams>, _tmpl: web::Data<Tera>) -> impl Responder {
     let mut ctx = tera::Context::new();
     ctx.insert("show_image", &true);
@@ -296,7 +301,7 @@ async fn wb_table(query: web::Query<IndexQueryParams>, _tmpl: web::Data<Tera>) -
 
     match airplane::visualizer::weight_and_balance_table(
         plane,
-        WeightBalanceTableVisualization::new((620,220)),
+        WeightBalanceTableVisualization::new((620, 220)),
     ) {
         airplane::visualizer::Visualization::Svg(svg) => {
             return HttpResponse::Ok().content_type("image/svg+xml").body(svg);
@@ -343,8 +348,8 @@ async fn wb_chart(query: web::Query<IndexQueryParams>, _tmpl: web::Data<Tera>) -
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let mut tera = Tera::default();
-    for file in Asset::iter() {
-        if let Some(content) = Asset::get(file.as_ref()) {
+    for file in Templates::iter() {
+        if let Some(content) = Templates::get(file.as_ref()) {
             let content_str = std::str::from_utf8(&content.data).unwrap();
             tera.add_raw_template(file.as_ref(), content_str).unwrap();
         }

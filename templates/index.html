@@ -4,7 +4,7 @@
     <title>Gewicht en Balans Aquila A210</title>
     <script src="https://unpkg.com/htmx.org@2.0.1"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         .custom-select {
             appearance: none;
@@ -21,24 +21,33 @@
             align-items: center;
             justify-content: center;
         }
-        .flex-grow-container {
-            flex-grow: 1;
-            display: flex;
+        .table-row:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
         }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded shadow-md flex flex-col items-center lg:items-stretch">
+    <div class="mb-20 bg-white p-8 rounded shadow-md flex flex-col items-center lg:items-stretch">
         <div class="text-center mb-8">
             <h1 class="text-2xl font-bold">Gewicht en Balans Aquila A210</h1>
         </div>
-        <div class="flex flex-col lg:flex-row lg:items-stretch w-full">
+        <div class="flex flex-col lg:items-stretch w-full">
             {% include "wb_form.html" %}
             <div id="wb-image-container" class="flex-grow flex items-center justify-center">
                 <p class="text-center text-gray-700 text-lg font-semibold max-w-lg"> Vul het formulier in en klik op "Bereken Gewicht en Balans" om het gewicht en balans te visualiseren.</p>
             </div>
         </div>
     </div>
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+<script>
+  kofiWidgetOverlay.draw('michaelvlaar', {
+    'type': 'floating-chat',
+    'floating-chat.donateButton.text': 'Donate',
+    'floating-chat.donateButton.background-color': '#00b9fe',
+    'floating-chat.donateButton.text-color': '#fff'
+  });
+</script>
 </body>
 </html>
 
