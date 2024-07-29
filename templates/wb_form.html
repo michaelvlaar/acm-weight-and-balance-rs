@@ -5,19 +5,20 @@
             <option value="PHDHB" {% if callsign is defined and callsign == "PHDHB" %}selected{% endif %}>PHDHB</option>
         </select>
     </div>            
+    
     <div class="mb-4">
         <label for="piloot-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Piloot (kg)</label>
-        <input type="number" min="0" id="piloot-gewicht" {% if pilot %}value="{{ pilot }}"{% endif %} name="pilot" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <input type="number" placeholder="Gewicht piloot in kg" min="0" id="piloot-gewicht" {% if pilot %}value="{{ pilot }}"{% endif %} name="pilot" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
     </div>
 
     <div class="mb-4">
         <label for="passagier-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Passagier (kg)</label>
-        <input type="number" min="0" id="passagier-gewicht" {% if passenger %}value="{{ passenger }}"{% endif %} name="passenger" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <input type="number" min="0" placeholder="Gewicht passagier in kg" id="passagier-gewicht" {% if passenger %}value="{{ passenger }}"{% endif %} name="passenger" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
     </div>
 
     <div class="mb-4">
-        <label for="bagage-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Bagage (kg)</label>
-        <input type="number" min="0" max="40" id="bagage-gewicht" {% if baggage %}value="{{ baggage }}"{% endif %} name="bagage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <label for="bagage-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Bagage (kg, max. 40)</label>
+        <input type="number" min="0" max="40" placeholder="Gewicht bagage in kg" id="bagage-gewicht" {% if baggage %}value="{{ baggage }}"{% endif %} name="bagage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
     </div>
 
     <div class="mb-4" >
@@ -34,66 +35,39 @@
 </form>
 {% if show_image %}
 <div hx-swap-oob="true" id="wb-image-container" class="w-full lg:w-full flex flex-col items-center justify-center">
-    <img src="{{ wb_chart_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
-    {% if wb_table is defined %}
-    <table class="border border-gray min-w-full divide-y divide-gray-200">
-        {% for row in wb_table %}
-            {% if loop.first %}
-                <thead class="bg-gray-200"><tr>
-                {% for item in row %}
-                {% if loop.index0 == 1 %}
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider hidden md:block">{{ item }}</th>
-                {% else %}
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">{{ item }}</th>
-                {% endif %}
-                {% endfor %}
-            {% elif loop.last %}
-                <tfoot class="bg-gray-200"><tr>
-                {% for item in row %}
-                {% if loop.first %}
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">{{ item }}</th>
-                {% else %}
-                    {% if loop.index0 == 1 %}
-                        <th class="px-6 py-3 text-xs font-medium text-gray-900 uppercase tracking-wider text-right hidden md:block">{{ item }}</th>
-                    {% else %}
-                        <th class="px-6 py-3 text-xs font-medium text-gray-900 uppercase tracking-wider text-right">{{ item }}</th>
-                    {% endif %}
-                {% endif %}
-                {% endfor %}
-            {% else %}
-                {% if loop.index % 2 == 0%}
-                <tr class="table-row"> 
-                {% else %}
-                <tr class="table-row bg-gray-50"> 
-                {% endif %}
-                {% for item in row %}
-                    {% if loop.first %}
-                        <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">{{ item }}</td>
-                    {% else %}
-                        {% if loop.index0 == 1 %}
-                            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-right hidden md:block">{{ item }}</td>
-                        {% else %}
-                            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-right">{{ item }}</td>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-
-
-            {% if loop.first %}
-                </tr></thead>
-            {% elif loop.last %}
-                </tr><tfoot>
-            {% else %}
-                </tr> 
-            {% endif %}
-        {% endfor %}
-        </table>
-        <div class="mt-4 md:hidden p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700">
-            <p class="text-sm">
-                Sommige gegevens zijn verborgen vanwege beperkte ruimte. Draai uw apparaat naar landschapsmodus om alle informatie te bekijken.
-            </p>
+<img src="{{ wb_chart_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
+{% if wb_table is defined %}
+{% include "wb_table.html" %}
+    <div class="mt-4 md:hidden p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700">
+        <p class="text-sm">
+            Sommige gegevens zijn verborgen vanwege beperkte ruimte. Draai uw apparaat naar landschapsmodus om alle informatie te bekijken.
+        </p>
+    </div>
+    <form class="flex w-full flex-col" id="print-form">
+        <div class="text-center mt-4">
+            <h1 class="text-2xl font-bold">Exporteren</h1>
         </div>
+        <div class="mb-4 w-full mt-4">
+                <label for="export-name" class="uppercase block text-gray-700 font-bold mb-2">Document Referentie</label>
+                <input required type="string" placeholder="Document referentie" id="export-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="flex w-full mt-2 items-center justify-between">
+            <input value="Opslaan als PDF" type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <iframe id="print-frame" style="display: none;"></iframe>
+        </div>
+        </form>
+        <script>
+        document.getElementById('print-form').addEventListener('submit', function(event) { 
+            event.preventDefault();
+            const iframe = document.getElementById('print-frame');
+              iframe.src = '{{ print_url | safe }}&' + 'reference=' + document.getElementById("export-name").value;
+
+            iframe.onload = function() {
+              iframe.contentWindow.print();
+            };
+          }
+        );
+        </script>
     {% endif %}
 </div>
 {% endif %}

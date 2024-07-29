@@ -20,6 +20,7 @@ struct IndexQueryParams {
     fuel_quantity: Option<String>,
     fuel_type: Option<String>,
     fuel_quantity_type: Option<String>,
+    reference: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -33,6 +34,48 @@ struct FuelOptionQueryParams {
 #[derive(RustEmbed)]
 #[folder = "templates/"]
 struct Templates;
+
+async fn print(
+    query: web::Query<IndexQueryParams>,
+    req: HttpRequest,
+    tmpl: web::Data<Tera>,
+) -> impl Responder {
+    let mut ctx = tera::Context::new();
+
+    ctx.insert(
+        "wb_chart_image_url",
+        &format!("/wb-chart?{}", req.query_string()),
+    );
+    let document_reference = query.reference.clone();
+    let (
+        callsign,
+        pilot,
+        passenger,
+        baggage,
+        fuel_quantity,
+        fuel_type,
+        fuel_quantity_type,
+        fuel_option,
+    ) = parse_query(query);
+
+    let plane = build_plane(
+        callsign.clone(),
+        pilot,
+        passenger,
+        baggage,
+        fuel_quantity,
+        fuel_type.clone(),
+        fuel_quantity_type.clone(),
+        fuel_option.clone(),
+    );
+
+    ctx.insert("wb_table", &weight_and_balance_table_strings(plane));
+    ctx.insert("document_reference", &document_reference.unwrap_or_default());
+    ctx.insert("print", &true);
+
+    let rendered = tmpl.render("print.html", &ctx).unwrap();
+    HttpResponse::Ok().content_type("text/html").body(rendered)
+}
 
 async fn index(
     query: web::Query<IndexQueryParams>,
@@ -106,6 +149,9 @@ async fn index(
             "wb_chart_image_url",
             &format!("/wb-chart?{}", req.query_string()),
         );
+
+        ctx.insert("print_url", &format!("/print?{}", req.query_string()));
+
         ctx.insert("wb_table", &weight_and_balance_table_strings(plane));
         "wb_form.html"
     } else {
@@ -362,6 +408,7 @@ async fn main() -> std::io::Result<()> {
             .route("/wb-chart", web::get().to(wb_chart))
             .route("/wb-table", web::get().to(wb_table))
             .route("/fuel-option", web::get().to(fuel_option))
+            .route("/print", web::get().to(print))
     })
     .bind("0.0.0.0:80")?
     .run()

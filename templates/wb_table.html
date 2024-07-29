@@ -1,0 +1,89 @@
+{% if print is undefined %}
+<table class="border border-gray min-w-full divide-y divide-gray-200">
+    {% for row in wb_table %}
+        {% if loop.first %}
+            <thead class="bg-gray-200"><tr>
+            {% for item in row %}
+            {% if loop.index0 == 0 %}
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">{{ item }}</th>
+            {% elif loop.index0 == 1 %}
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-900 uppercase tracking-wider hidden md:block">{{ item }}</th>
+            {% else %}
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-900 uppercase tracking-wider">{{ item }}</th>
+            {% endif %}
+            {% endfor %}
+        {% elif loop.last %}
+            <tfoot class="bg-gray-200"><tr>
+            {% for item in row %}
+            {% if loop.first %}
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">{{ item }}</th>
+            {% else %}
+                {% if loop.index0 == 0 %}
+                    <th class="px-6 py-3 text-xs font-medium text-gray-900 uppercase tracking-wider text-left">{{ item }}</th>
+                {% elif loop.index0 == 1 %}
+                    <th class="px-6 py-3 text-xs font-medium text-gray-900 uppercase tracking-wider text-right hidden md:block">{{ item }}</th>
+                {% else %}
+                    <th class="px-6 py-3 text-xs font-medium text-gray-900 uppercase tracking-wider text-right">{{ item }}</th>
+                {% endif %}
+            {% endif %}
+            {% endfor %}
+        {% else %}
+            {% if loop.index % 2 == 0%}
+            <tr class="table-row"> 
+            {% else %}
+            <tr class="table-row bg-gray-50"> 
+            {% endif %}
+            {% for item in row %}
+                {% if loop.first %}
+                    <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">{{ item }}</td>
+                {% else %}
+                    {% if loop.index0 == 1 %}
+                        <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-right hidden md:block">{{ item }}</td>
+                    {% else %}
+                        <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-right">{{ item }}</td>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+
+        {% if loop.first %}
+            </tr></thead>
+        {% elif loop.last %}
+            </tr><tfoot>
+        {% else %}
+            </tr> 
+        {% endif %}
+    {% endfor %}
+    </table>
+    {% else %}
+<table class="uppercase">
+    {% for row in wb_table %}
+        {% if loop.first %}
+            <thead><tr>
+            {% for item in row %}
+                <th>{{ item }}</th>
+            {% endfor %}
+        {% elif loop.last %}
+            <tfoot><tr>
+            {% for item in row %}
+                <th>{{ item }}</th>
+            {% endfor %}
+        {% else %}
+            <tr> 
+            {% for item in row %}
+                        <td>{{ item }}</td>
+            {% endfor %}
+        {% endif %}
+
+
+        {% if loop.first %}
+            </tr></thead>
+        {% elif loop.last %}
+            </tr><tfoot>
+        {% else %}
+            </tr> 
+        {% endif %}
+    {% endfor %}
+    </table>
+    {% endif %}
