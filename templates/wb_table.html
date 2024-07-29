@@ -62,17 +62,29 @@
         {% if loop.first %}
             <thead><tr>
             {% for item in row %}
-                <th>{{ item }}</th>
+                {% if loop.index0 > 0 %}
+                    <th class="text-right">{{ item }}</th>
+                {% else %}
+                    <th>{{ item }}</th>
+                {% endif %}
             {% endfor %}
         {% elif loop.last %}
             <tfoot><tr>
             {% for item in row %}
-                <th>{{ item }}</th>
+                {% if loop.index0 > 0 %}
+                    <th class="text-right">{{ item }}</th>
+                {% else %}
+                    <th>{{ item }}</th>
+                {% endif %}        
             {% endfor %}
         {% else %}
             <tr> 
             {% for item in row %}
-                        <td>{{ item }}</td>
+                {% if loop.index0 > 0 %}
+                    <td class="text-right">{{ item }}</td>
+                {% else %}
+                    <td>{{ item }}</td>
+                {% endif %}        
             {% endfor %}
         {% endif %}
 
