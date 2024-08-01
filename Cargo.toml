@@ -1,6 +1,6 @@
 [package]
 name = "acm_weight_and_balance"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 
 [dependencies]
