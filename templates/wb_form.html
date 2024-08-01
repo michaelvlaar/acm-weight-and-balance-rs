@@ -1,68 +1,103 @@
 <form class="w-full mb-2" hx-get="/" hx-swap="outerHTML">
     <div class="mb-4"> <label for="callsign" class="uppercase block text-gray-700 font-bold mb-2">Vliegtuig</label>
-        <select id="callsign" name="callsign" class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer" required>
-            <option value="PHDHA" {% if callsign is defined and callsign == "PHDHA" %}selected{% endif %}>PHDHA</option>
-            <option value="PHDHB" {% if callsign is defined and callsign == "PHDHB" %}selected{% endif %}>PHDHB</option>
+        <select id="callsign" name="callsign"
+            class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+            required>
+            <option value="PHDHA" {% if callsign is defined and callsign=="PHDHA" %}selected{% endif %}>PHDHA</option>
+            <option value="PHDHB" {% if callsign is defined and callsign=="PHDHB" %}selected{% endif %}>PHDHB</option>
         </select>
-    </div>            
-    
+    </div>
+
     <div class="mb-4">
         <label for="piloot-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Piloot (kg)</label>
-        <input type="number" placeholder="Gewicht piloot in kg" min="0" id="piloot-gewicht" {% if pilot %}value="{{ pilot }}"{% endif %} name="pilot" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <input type="number" placeholder="Gewicht piloot in kg" min="0" id="piloot-gewicht" {% if pilot
+            %}value="{{ pilot }}" {% endif %} name="pilot"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            required>
     </div>
 
     <div class="mb-4">
         <label for="passagier-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Passagier (kg)</label>
-        <input type="number" min="0" placeholder="Gewicht passagier in kg" id="passagier-gewicht" {% if passenger %}value="{{ passenger }}"{% endif %} name="passenger" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" >
+        <input type="number" min="0" placeholder="Gewicht passagier in kg" id="passagier-gewicht" {% if passenger
+            %}value="{{ passenger }}" {% endif %} name="passenger"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
     <div class="mb-4">
-        <label for="bagage-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Bagage (kg, max. 40)</label>
-        <input type="number" min="0" max="40" placeholder="Gewicht bagage in kg" id="bagage-gewicht" {% if baggage %}value="{{ baggage }}"{% endif %} name="bagage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <label for="bagage-gewicht" class="uppercase block text-gray-700 font-bold mb-2">bagage (kg, max. 40)</label>
+        <input type="number" min="0" max="40" placeholder="gewicht bagage in kg" id="bagage-gewicht" {% if baggage
+            %}value="{{ baggage }}" {% endif %} name="bagage"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     </div>
 
-    <div class="mb-4" >
+    <div class="mb-4">
         <label for="brandstof-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Brandstof</label>
         <div class="flex items-center mb-2">
-            <input type="checkbox" id="auto-calculate" {% if fuel_option is defined and fuel_option == "auto" %}checked="checked"{% endif %} name="fuel_option" value="auto" class="form-checkbox h-5 w-5 text-gray-600" hx-get="/fuel-option" hx-include="[name='fuel_option'],[name='fuel_type'],[name='fuel_quantity_type'],[name='fuel_quantity']" hx-trigger="change" hx-target="#fuel-option">
+            <input type="checkbox" id="auto-calculate" {% if fuel_option is defined and fuel_option=="auto"
+                %}checked="checked" {% endif %} name="fuel_option" value="auto"
+                class="form-checkbox h-5 w-5 text-gray-600" hx-get="/fuel-option"
+                hx-include="[name='fuel_option'],[name='fuel_type'],[name='fuel_quantity_type'],[name='fuel_quantity']"
+                hx-trigger="change" hx-target="#fuel-option">
             <label for="auto-calculate" class="ml-2 block text-gray-700 font-bold">Automatisch Berekenen</label>
         </div>
         {% include "wb_form_fuel_option.html" %}
     </div>
+    <div class="mb-4">
+        <label for="oat" class="uppercase block text-gray-700 font-bold mb-2">Outside Air Temperature (Celius)</label>
+        <input type="number" min="-30" max="40" placeholder="Outside air temperature" min="0" id="oat" name="oat" {% if oat 
+        %}value="{{ oat }}"{% endif %} class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            required>
+    </div>
+    <div class="mb-4">
+        <label for="pressure-altitude" class="uppercase block text-gray-700 font-bold mb-2">Pressure Altitude (Feet)</label>
+        <input type="number" min="0" max="8000" placeholder="Pressure altitude (feet)" id="pressure-altitude" {% if pressure_altitude 
+        %}value="{{ pressure_altitude }}"{% endif %} name="pressure_altitude" required
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    </div>
+    {% include "wb_form_wind_option.html" %}
     <div class="flex items-center justify-between">
-        <input type="submit" value="Bereken Gewicht en Balans" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <input type="submit" value="Bereken Gewicht en Balans"
+            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
     </div>
 </form>
 {% if show_image %}
 <div hx-swap-oob="true" id="wb-image-container" class="w-full lg:w-full flex flex-col items-center justify-center">
-<img src="{{ wb_chart_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
-{% if wb_table is defined %}
-{% include "wb_table.html" %}
-    <div class="mt-4 md:hidden p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700">
-        <p class="text-sm">
-            Sommige gegevens zijn verborgen vanwege beperkte ruimte. Draai uw apparaat naar landschapsmodus om alle informatie te bekijken.
-        </p>
+    <div class="text-center mb-8 mt-8">
+        <h1 class="text-2xl font-bold">Weight and Balance</h1>
     </div>
+    <img src="{{ wb_chart_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
+    {% if wb_table is defined %}
+    {% include "wb_table.html" %}
+
+    <div class="text-center mt-8">
+        <h1 class="text-2xl font-bold">Performance</h1>
+    </div>
+
+    <img src="{{ perf_chart_tod_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
+
     <div class="text-center mt-4">
         <h1 class="text-2xl font-bold">Exporteren</h1>
     </div>
     <div class="mb-4 w-full mt-4">
-            <label for="export-name" class="uppercase block text-gray-700 font-bold mb-2">Document Referentie</label>
-            <input required type="string" placeholder="Document referentie" id="export-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        <label for="export-name" class="uppercase block text-gray-700 font-bold mb-2">Document Referentie</label>
+        <input required type="string" placeholder="Document referentie" id="export-name"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            required>
     </div>
     <div class="flex w-full mt-2 items-center justify-between">
-        <input id="btn-print" value="Print / Opslaan als PDF" name="action" type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <input id="btn-print" value="Print / Opslaan als PDF" name="action" type="submit"
+            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
     </div>
     <iframe id="print-frame" style="display: none;"></iframe>
     <script>
-        document.getElementById('btn-print').addEventListener('click', function(event) { 
+        document.getElementById('btn-print').addEventListener('click', function (event) {
             const iframe = document.getElementById('print-frame');
-              iframe.src = '{{ print_url | safe }}&' + 'reference=' + document.getElementById("export-name").value;
+            iframe.src = '{{ print_url | safe }}&' + 'reference=' + document.getElementById("export-name").value;
 
-            iframe.onload = function() {
-              iframe.contentWindow.print();
+            iframe.onload = function () {
+                iframe.contentWindow.print();
             };
-          }
+        }
         );
     </script>
     {% endif %}

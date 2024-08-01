@@ -1,0 +1,12 @@
+<div class="mb-4" id="wind-option">
+<label for="wind" class="uppercase block text-gray-700 font-bold mb-2">Wind (kts)</label>
+<div class="flex">
+    <input type="number" min="0" {% if wind_direction is undefined or wind_direction == 'headwind' %}max="20"{% else %}max="10"{% endif %} placeholder="Wind (kts)" id="wind" name="wind" required {% if wind 
+        %}value="{{ wind }}"{% endif %} 
+            class="shadow mr-2 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <select id="wind-direction" hx-get="/wind-option" hx-trigger="change" hx-target="#wind-option" hx-include="[name='wind'],[name='wind_direction']" name="wind_direction" required class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer">
+        <option value="headwind" {% if wind_direction is undefined or wind_direction == 'headwind' %}selected{% endif %}>Headwind</option>
+        <option value="tailwind" {% if wind_direction is defined and wind_direction == 'tailwind' %}selected{% endif %}>Tailwind</option>
+    </select>
+</div>
+</div>

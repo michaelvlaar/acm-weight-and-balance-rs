@@ -56,6 +56,11 @@
         {% endif %}
     {% endfor %}
     </table>
+    <div class="mt-4 md:hidden p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700">
+        <p class="text-sm">
+            Sommige gegevens zijn verborgen vanwege beperkte ruimte. Draai uw apparaat naar landschapsmodus om alle informatie te bekijken.
+        </p>
+    </div>
     {% else %}
 <table class="uppercase">
     {% for row in wb_table %}
