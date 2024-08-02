@@ -74,6 +74,9 @@
     </div>
 
     <img src="{{ perf_chart_tod_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
+    <img src="{{ perf_chart_ldr_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
+
+    {% include "performance_table.html" %}
 
     <div class="text-center mt-4">
         <h1 class="text-2xl font-bold">Exporteren</h1>

@@ -1,0 +1,31 @@
+{% if print is undefined %}
+<table class="border border-gray divide-y divide-gray-200">
+    <thead class="bg-gray-200">
+        <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Distance [m]</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="table-row"><td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">Take-off Run Required (Ground Roll)</td><td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{ torr }}</td></tr>
+        <tr class="table-row bg-gray-50"><td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">Take-off Distance Required</td><td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{ todr }}</td></tr>
+        <tr class="table-row"><td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">Landing Distance</td><td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{ ldr }}</td></tr>
+        <tr class="table-row bg-gray-50"><td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">Landing Ground Roll</td><td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{ lgrr }}</td></tr>
+    </tbody>
+</table>
+{% else %}
+<table class="uppercase">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th class="text-center">Distance [m]</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>Take-off Run Required (Ground Roll)</td><td class="text-center">{{ torr }}</td></tr>
+        <tr><td>Take-off Distance Required</td><td class="text-center">{{ todr }}</td></tr>
+        <tr><td>Landing Distance</td><td class="text-center">{{ ldr }}</td></tr>
+        <tr><td>Landing Ground Roll</td><td class="text-center">{{ lgrr }}</td></tr>
+    </tbody>
+</table>
+{% endif %}
