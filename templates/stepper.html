@@ -10,42 +10,7 @@
                 <div class="min-h-7 inline-flex justify-center items-center text-xs align-middle">
                     {% if step2 is defined or step3 is defined %}
                     <form class="flex w-full" hx-get="/performance" hx-target="#main-form" hx-swap="outerHTML">
-                        {% if callsign is defined %}
-                        <input type="hidden" name="callsign" value="{{ callsign }}" />
-                        {% endif %}
-                        {% if pilot is defined %}
-                        <input type="hidden" name="pilot" value="{{ pilot }}" />
-                        {% endif %}
-                        {% if passenger is defined %}
-                        <input type="hidden" name="passenger" value="{{ passenger }}" />
-                        {% endif %}
-                        {% if baggage is defined %}
-                        <input type="hidden" name="baggage" value="{{ baggage }}" />
-                        {% endif %}
-                        {% if fuel_type is defined %}
-                        <input type="hidden" name="fuel_type" value="{{ fuel_type }}" />
-                        {% endif %}
-                        {% if fuel_option is defined %}
-                        <input type="hidden" name="fuel_option" value="{{ fuel_option }}" />
-                        {% endif %}
-                        {% if fuel_quantity is defined %}
-                        <input type="hidden" name="fuel_quantity" value="{{ fuel_quantity }}" />
-                        {% endif %}
-                        {% if fuel_quantity_type is defined %}
-                        <input type="hidden" name="fuel_quantity_type" value="{{ fuel_quantity_type }}" />
-                        {% endif %}
-                        {% if oat is defined %}
-                        <input type="hidden" name="oat" value="{{ oat }}" />
-                        {% endif %}
-                        {% if pressure_altitude is defined %}
-                        <input type="hidden" name="pressure_altitude" value="{{ pressure_altitude }}" />
-                        {% endif %}
-                        {% if wind is defined %}
-                        <input type="hidden" name="wind" value="{{ wind }}" />
-                        {% endif %}
-                        {% if wind_direction is defined %}
-                        <input type="hidden" name="wind_direction" value="{{ wind_direction }}" />
-                        {% endif %}
+                        {% include "state.html" %}
                         <input type="hidden" name="submit" value="Vorige" />
                         <button type="submit"
                             class="bg-indigo-600 flex justify-center items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
@@ -71,42 +36,7 @@
                 <div class="min-w-7 min-h-7 inline-flex justify-center items-center text-xs align-middle">
                     {% if step3 is defined  %}
                     <form class="flex w-full" hx-get="/export" hx-target="#main-form" hx-swap="outerHTML">
-                        {% if callsign is defined %}
-                        <input type="hidden" name="callsign" value="{{ callsign }}" />
-                        {% endif %}
-                        {% if pilot is defined %}
-                        <input type="hidden" name="pilot" value="{{ pilot }}" />
-                        {% endif %}
-                        {% if passenger is defined %}
-                        <input type="hidden" name="passenger" value="{{ passenger }}" />
-                        {% endif %}
-                        {% if baggage is defined %}
-                        <input type="hidden" name="baggage" value="{{ baggage }}" />
-                        {% endif %}
-                        {% if fuel_type is defined %}
-                        <input type="hidden" name="fuel_type" value="{{ fuel_type }}" />
-                        {% endif %}
-                        {% if fuel_option is defined %}
-                        <input type="hidden" name="fuel_option" value="{{ fuel_option }}" />
-                        {% endif %}
-                        {% if fuel_quantity is defined %}
-                        <input type="hidden" name="fuel_quantity" value="{{ fuel_quantity }}" />
-                        {% endif %}
-                        {% if fuel_quantity_type is defined %}
-                        <input type="hidden" name="fuel_quantity_type" value="{{ fuel_quantity_type }}" />
-                        {% endif %}
-                        {% if oat is defined %}
-                        <input type="hidden" name="oat" value="{{ oat }}" />
-                        {% endif %}
-                        {% if pressure_altitude is defined %}
-                        <input type="hidden" name="pressure_altitude" value="{{ pressure_altitude }}" />
-                        {% endif %}
-                        {% if wind is defined %}
-                        <input type="hidden" name="wind" value="{{ wind }}" />
-                        {% endif %}
-                        {% if wind_direction is defined %}
-                        <input type="hidden" name="wind_direction" value="{{ wind_direction }}" />
-                        {% endif %}
+                        {% include "state.html" %}
                         <input type="hidden" name="submit" value="Vorige" />
                         <button type="submit"
                             class="bg-indigo-600 size-7 flex justify-center items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">

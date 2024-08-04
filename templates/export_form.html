@@ -1,17 +1,6 @@
 <form hx-get="/export" hx-swap="outerHTML" id="main-form" class="w-full">
-    <input type="hidden" name="callsign" value="{{ callsign }}" />
-    <input type="hidden" name="pilot" value="{{ pilot }}" />
-    <input type="hidden" name="passenger" value="{{ passenger }}" />
-    <input type="hidden" name="baggage" value="{{ baggage }}" />
-    <input type="hidden" name="fuel_type" value="{{ fuel_type }}" />
-    <input type="hidden" name="fuel_option" value="{{ fuel_option }}" />
-    <input type="hidden" name="fuel_quantity" value="{{ fuel_quantity }}" />
-    <input type="hidden" name="fuel_quantity_type" value="{{ fuel_quantity_type }}" />
-    <input type="hidden" name="oat" value="{{ oat }}" />
-    <input type="hidden" name="pressure_altitude" value="{{ pressure_altitude }}" />
-    <input type="hidden" name="wind" value="{{ wind }}" />
-    <input type="hidden" name="wind_direction" value="{{ wind_direction }}" />
-    
+    {% include "state.html" %} 
+
     <div class="text-center mt-2">
         <h1 class="text-2xl uppercase font-bold">Opslaan</h1>
     </div>

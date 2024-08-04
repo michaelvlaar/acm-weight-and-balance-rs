@@ -14,7 +14,9 @@ use tera::Tera;
 struct IndexQueryParams {
     callsign: Option<String>,
     pilot: Option<f64>,
+    pilot_seat: Option<String>,
     passenger: Option<String>,
+    passenger_seat: Option<String>,
     baggage: Option<String>,
     fuel_option: Option<String>,
     fuel_quantity: Option<String>,
@@ -677,7 +679,9 @@ async fn export(
     let (
         callsign,
         pilot,
+        pilot_seat,
         passenger,
+        passenger_seat,
         baggage,
         fuel_quantity,
         fuel_type,
@@ -692,7 +696,9 @@ async fn export(
 
     ctx.insert("callsign", &callsign);
     ctx.insert("pilot", &pilot);
+    ctx.insert("pilot_seat", &pilot_seat);
     ctx.insert("passenger", &passenger);
+    ctx.insert("passenger_seat", &passenger_seat);
     ctx.insert("baggage", &baggage);
     ctx.insert("oat", &oat);
     ctx.insert("pressure_altitude", &pressure_altitude);
@@ -718,7 +724,9 @@ async fn export(
         let plane = build_plane(
             callsign.clone(),
             pilot,
+            pilot_seat,
             passenger,
+            passenger_seat,
             baggage,
             fuel_quantity,
             fuel_type.clone(),
@@ -784,7 +792,9 @@ async fn performance(
     let (
         callsign,
         pilot,
+        pilot_seat,
         passenger,
+        passenger_seat,
         baggage,
         fuel_quantity,
         fuel_type,
@@ -799,7 +809,9 @@ async fn performance(
 
     ctx.insert("callsign", &callsign);
     ctx.insert("pilot", &pilot);
+    ctx.insert("pilot_seat", &pilot_seat);
     ctx.insert("passenger", &passenger);
+    ctx.insert("passenger_seat", &passenger_seat);
     ctx.insert("baggage", &baggage);
     ctx.insert("oat", &oat);
     ctx.insert("pressure_altitude", &pressure_altitude);
@@ -846,7 +858,9 @@ async fn print(
     let (
         callsign,
         pilot,
+        pilot_seat,
         passenger,
+        passenger_seat,
         baggage,
         fuel_quantity,
         fuel_type,
@@ -862,7 +876,9 @@ async fn print(
     let plane = build_plane(
         callsign.clone(),
         pilot,
+        pilot_seat,
         passenger,
+        passenger_seat,
         baggage,
         fuel_quantity,
         fuel_type.clone(),
@@ -930,12 +946,12 @@ async fn index(
     let headers = req.headers();
 
     let template = if headers.get("HX-Request").is_some() {
-        ctx.insert("show_image", &true);
-
         let (
             callsign,
             pilot,
+            pilot_seat,
             passenger,
+            passenger_seat,
             baggage,
             fuel_quantity,
             fuel_type,
@@ -951,7 +967,9 @@ async fn index(
         let plane = build_plane(
             callsign.clone(),
             pilot,
+            pilot_seat.clone(),
             passenger,
+            passenger_seat.clone(),
             baggage,
             fuel_quantity,
             fuel_type.clone(),
@@ -973,7 +991,9 @@ async fn index(
 
         ctx.insert("callsign", &callsign);
         ctx.insert("pilot", &pilot);
+        ctx.insert("pilot_seat", &pilot_seat);
         ctx.insert("passenger", &passenger);
+        ctx.insert("passenger_seat", &passenger_seat);
         ctx.insert("baggage", &baggage);
         ctx.insert("oat", &oat);
         ctx.insert("pressure_altitude", &pressure_altitude);
@@ -1113,7 +1133,9 @@ async fn fuel_option(
 fn build_plane(
     callsign: String,
     pilot: f64,
+    pilot_seat: String,
     passenger: f64,
+    passenger_seat: String,
     baggage: f64,
     fuel_quantity: f64,
     fuel_type: String,
@@ -1132,12 +1154,12 @@ fn build_plane(
             ),
             Moment::new(
                 "Pilot".to_string(),
-                LeverArm::Meter(0.515),
+                if pilot_seat.eq("f") { LeverArm::Meter(5.0/11.0) } else if pilot_seat.eq("m") { LeverArm::Meter(23.0/44.0) } else { LeverArm::Meter(13.0/22.0) },
                 Mass::Kilo(pilot),
             ),
             Moment::new(
                 "Passenger".to_string(),
-                LeverArm::Meter(0.515),
+                if passenger_seat.eq("f") { LeverArm::Meter(5.0/11.0) } else if passenger_seat.eq("m") { LeverArm::Meter(23.0/44.0) } else { LeverArm::Meter(13.0/22.0) },
                 Mass::Kilo(passenger),
             ),
             Moment::new(
@@ -1201,7 +1223,9 @@ fn parse_query(
 ) -> (
     String,
     f64,
+    String,
     f64,
+    String,
     f64,
     f64,
     String,
@@ -1251,10 +1275,18 @@ fn parse_query(
         .wind_direction
         .unwrap_or_else(|| "headwind".to_string());
     let submit = query_params.submit.unwrap_or_default();
+    let pilot_seat = query_params
+        .pilot_seat
+        .unwrap_or_else(|| "m".to_string());
+    let passenger_seat = query_params
+        .passenger_seat
+        .unwrap_or_else(|| "m".to_string());
     (
         callsign,
         pilot,
+        pilot_seat,
         passenger,
+        passenger_seat,
         baggage,
         fuel_quantity,
         fuel_type,
@@ -1275,7 +1307,9 @@ async fn wb_table(query: web::Query<IndexQueryParams>, _tmpl: web::Data<Tera>) -
     let (
         callsign,
         pilot,
+        pilot_seat,
         passenger,
+        passenger_seat,
         baggage,
         fuel_quantity,
         fuel_type,
@@ -1291,7 +1325,9 @@ async fn wb_table(query: web::Query<IndexQueryParams>, _tmpl: web::Data<Tera>) -
     let plane = build_plane(
         callsign,
         pilot,
+        pilot_seat,
         passenger,
+        passenger_seat,
         baggage,
         fuel_quantity,
         fuel_type,
@@ -1316,7 +1352,9 @@ async fn wb_chart(query: web::Query<IndexQueryParams>, _tmpl: web::Data<Tera>) -
     let (
         callsign,
         pilot,
+        pilot_seat,
         passenger,
+        passenger_seat,
         baggage,
         fuel_quantity,
         fuel_type,
@@ -1332,7 +1370,9 @@ async fn wb_chart(query: web::Query<IndexQueryParams>, _tmpl: web::Data<Tera>) -
     let plane = build_plane(
         callsign,
         pilot,
+        pilot_seat,
         passenger,
+        passenger_seat,
         baggage,
         fuel_quantity,
         fuel_type,

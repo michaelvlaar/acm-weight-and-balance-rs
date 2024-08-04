@@ -1,17 +1,5 @@
 <form hx-get="/performance" id="main-form" hx-swap="outerHTML show:top" class="w-full flex flex-col"> 
-    <input type="hidden" name="callsign" value="{{ callsign }}" />
-    <input type="hidden" name="pilot" value="{{ pilot }}" />
-    <input type="hidden" name="passenger" value="{{ passenger }}" />
-    <input type="hidden" name="baggage" value="{{ baggage }}" />
-    <input type="hidden" name="fuel_type" value="{{ fuel_type }}" />
-    <input type="hidden" name="fuel_option" value="{{ fuel_option }}" />
-    <input type="hidden" name="fuel_quantity" value="{{ fuel_quantity }}" />
-    <input type="hidden" name="fuel_quantity_type" value="{{ fuel_quantity_type }}" />
-    <input type="hidden" name="oat" value="{{ oat }}" />
-    <input type="hidden" name="pressure_altitude" value="{{ pressure_altitude }}" />
-    <input type="hidden" name="wind" value="{{ wind }}" />
-    <input type="hidden" name="wind_direction" value="{{ wind_direction }}" />
-
+    {% include "state.html" %}
     <div class="text-center mb-2 mt-2">
         <h1 class="text-xl font-bold uppercase">Gewicht en Balans</h1>
     </div>

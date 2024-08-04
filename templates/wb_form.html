@@ -9,21 +9,41 @@
                     <option value="PHDHB" {% if callsign is defined and callsign=="PHDHB" %}selected{% endif %}>PHDHB</option>
                 </select>
             </div>
-            <div class="mb-4">
-                <label for="piloot-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Piloot (kg)</label>
-                <input type="number" placeholder="Gewicht piloot in kg" min="0" id="piloot-gewicht" {% if pilot
-                    %}value="{{ pilot }}" {% endif %} name="pilot"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    required>
+            <div class="flex w-full">
+                <div class="mb-4 w-1/2 mr-1">
+                    <label for="piloot-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Piloot (kg)</label>
+                    <input type="number" placeholder="Gewicht piloot in kg" min="0" id="piloot-gewicht" {% if pilot
+                        %}value="{{ pilot }}" {% endif %} name="pilot"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        required>
+                </div>
+                <div class="mb-4 w-1/2 ml-1"> <label for="pilot-seat" class="uppercase block text-gray-700 font-bold mb-2">Stoel Positie</label>
+                    <select id="pilot-seat" name="pilot_seat"
+                        class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                        required>
+                        <option value="b" {% if pilot_seat is defined and pilot_seat=="b" %}selected{% endif %}>Achter</option>
+                        <option value="m" {% if pilot_seat is defined and pilot_seat=="m" %}selected{% endif %}>Midden</option>
+                        <option value="f" {% if pilot_seat is defined and pilot_seat=="f" %}selected{% endif %}>Voor</option>
+                    </select>
+                </div>
+            </div> 
+            <div class="w-full flex">
+                <div class="mb-4 w-1/2 mr-1">
+                    <label for="passagier-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Passagier (kg)</label>
+                    <input type="number" min="0" placeholder="Gewicht passagier in kg" id="passagier-gewicht" {% if passenger
+                        %}value="{{ passenger }}" {% endif %} name="passenger"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4 w-1/2 ml-1"> <label for="passenger-seat" class="uppercase block text-gray-700 font-bold mb-2">Stoel Positie</label>
+                    <select id="passenger-seat" name="passenger_seat"
+                        class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                        required>
+                        <option value="b" {% if passenger_seat is defined and passenger_seat=="b" %}selected{% endif %}>Achter</option>
+                        <option value="m" {% if passenger_seat is defined and passenger_seat=="m" %}selected{% endif %}>Midden</option>
+                        <option value="f" {% if passenger_seat is defined and passenger_seat=="f" %}selected{% endif %}>Voor</option>
+                    </select>
+                </div>
             </div>
-
-            <div class="mb-4">
-                <label for="passagier-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Passagier (kg)</label>
-                <input type="number" min="0" placeholder="Gewicht passagier in kg" id="passagier-gewicht" {% if passenger
-                    %}value="{{ passenger }}" {% endif %} name="passenger"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-
             <div class="mb-4">
                 <label for="bagage-gewicht" class="uppercase block text-gray-700 font-bold mb-2">bagage (kg, max. 40)</label>
                 <input type="number" min="0" max="40" placeholder="Gewicht bagage in kg" id="bagage-gewicht" {% if baggage
