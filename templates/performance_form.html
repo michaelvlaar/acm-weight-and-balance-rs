@@ -1,0 +1,37 @@
+<form hx-get="/performance" id="main-form" hx-swap="outerHTML show:top" class="w-full flex flex-col"> 
+    <input type="hidden" name="callsign" value="{{ callsign }}" />
+    <input type="hidden" name="pilot" value="{{ pilot }}" />
+    <input type="hidden" name="passenger" value="{{ passenger }}" />
+    <input type="hidden" name="baggage" value="{{ baggage }}" />
+    <input type="hidden" name="fuel_type" value="{{ fuel_type }}" />
+    <input type="hidden" name="fuel_option" value="{{ fuel_option }}" />
+    <input type="hidden" name="fuel_quantity" value="{{ fuel_quantity }}" />
+    <input type="hidden" name="fuel_quantity_type" value="{{ fuel_quantity_type }}" />
+    <input type="hidden" name="oat" value="{{ oat }}" />
+    <input type="hidden" name="pressure_altitude" value="{{ pressure_altitude }}" />
+    <input type="hidden" name="wind" value="{{ wind }}" />
+    <input type="hidden" name="wind_direction" value="{{ wind_direction }}" />
+
+    <div class="text-center mb-2 mt-2">
+        <h1 class="text-xl font-bold uppercase">Gewicht en Balans</h1>
+    </div>
+    
+    <img src="{{ wb_chart_image_url | safe }}" alt="Chart" class="w-full mb-2 sm:w-1/2">
+    {% include "wb_table.html" %}
+    
+    <div class="text-center mt-8">
+        <h1 class="text-2xl font-bold uppercase">Prestaties</h1>
+    </div>
+
+    <img src="{{ perf_chart_tod_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
+    <img src="{{ perf_chart_ldr_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
+
+  {% include "performance_table.html" %}
+
+    <div class="mt-4 flex items-center justify-between">
+        <input name="submit" value="Vorige" type="submit" class="mr-1 w-full bg-gray-200 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <input name="submit" value="Volgende" type="submit" class="w-full bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+    </div>
+</form>
+
+{% include "stepper.html" %}

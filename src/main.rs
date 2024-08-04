@@ -15,7 +15,7 @@ struct IndexQueryParams {
     callsign: Option<String>,
     pilot: Option<f64>,
     passenger: Option<String>,
-    bagage: Option<String>,
+    baggage: Option<String>,
     fuel_option: Option<String>,
     fuel_quantity: Option<String>,
     fuel_type: Option<String>,
@@ -25,6 +25,7 @@ struct IndexQueryParams {
     pressure_altitude: Option<f64>,
     wind: Option<f64>,
     wind_direction: Option<String>,
+    submit: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -645,7 +646,6 @@ async fn perf_ldr(
 
 async fn perf_tod(
     query: web::Query<PerfQueryParams>,
-    _req: HttpRequest,
     tmpl: web::Data<Tera>,
 ) -> impl Responder {
     let mut ctx = tera::Context::new();
@@ -665,6 +665,168 @@ async fn perf_tod(
     HttpResponse::Ok()
         .content_type("image/svg+xml")
         .body(rendered)
+}
+
+async fn export(
+    query: web::Query<IndexQueryParams>,
+    req: HttpRequest,
+    tmpl: web::Data<Tera>,
+) -> impl Responder {
+    let mut ctx = tera::Context::new();
+
+    let (
+        callsign,
+        pilot,
+        passenger,
+        baggage,
+        fuel_quantity,
+        fuel_type,
+        fuel_quantity_type,
+        fuel_option,
+        oat,
+        pressure_altitude,
+        wind,
+        wind_direction,
+        submit,
+    ) = parse_query(query);
+
+    ctx.insert("callsign", &callsign);
+    ctx.insert("pilot", &pilot);
+    ctx.insert("passenger", &passenger);
+    ctx.insert("baggage", &baggage);
+    ctx.insert("oat", &oat);
+    ctx.insert("pressure_altitude", &pressure_altitude);
+    ctx.insert("wind", &wind);
+    ctx.insert("wind_direction", &wind_direction);
+    ctx.insert(
+        "fuel_quantity",
+        &format!("{:.2}", &fuel_quantity).parse::<f64>().unwrap(),
+    );
+    ctx.insert("fuel_type", &fuel_type);
+    ctx.insert("fuel_quantity_type", &fuel_quantity_type);
+    ctx.insert("fuel_option", "manual");
+    ctx.insert("stepper_oob_swap", &true);
+
+    if submit.eq("Vorige") {
+        ctx.insert("step2", &true);
+
+        ctx.insert(
+            "wb_chart_image_url",
+            &format!("/wb-chart?{}", req.query_string()),
+        );
+    
+        let plane = build_plane(
+            callsign.clone(),
+            pilot,
+            passenger,
+            baggage,
+            fuel_quantity,
+            fuel_type.clone(),
+            fuel_quantity_type.clone(),
+            fuel_option.clone(),
+        );
+
+        ctx.insert(
+            "perf_chart_tod_image_url",
+            &format!(
+                "/perf-tod?{}&mtow={}",
+                req.query_string(),
+                &plane.total_mass().kilo()
+            ),
+        );
+        ctx.insert(
+            "perf_chart_ldr_image_url",
+            &format!(
+                "/perf-ldr?{}&mtow={}",
+                req.query_string(),
+                &plane.total_mass().kilo()
+            ),
+        );
+
+        let (_, _, _, _, _, _, _, lgrr, ldr) = calculate_aquila_performance_ldr(PerfQueryParams {
+            mtow: plane.total_mass().kilo(),
+            wind_direction: wind_direction.clone(),
+            wind,
+            pressure_altitude,
+            oat,
+        });
+
+        let (_, _, _, _, _, _, _, tod_gr, tod_dr) = calculate_aquila_performance_tod(PerfQueryParams {
+            mtow: plane.total_mass().kilo(),
+            wind_direction,
+            wind,
+            pressure_altitude,
+            oat,
+        });
+
+        ctx.insert("ldr", &format!("{:.0}", ldr));
+        ctx.insert("lgrr", &format!("{:.0}", lgrr));
+        ctx.insert("torr", &format!("{:.0}", tod_gr));
+        ctx.insert("todr", &format!("{:.0}", tod_dr));
+
+        ctx.insert("wb_table", &weight_and_balance_table_strings(plane));
+
+        let rendered = tmpl.render("performance_form.html", &ctx).unwrap();
+        return HttpResponse::Ok().content_type("text/html").body(rendered);
+    }
+
+    let rendered = tmpl.render("export_form.html", &ctx).unwrap();
+    HttpResponse::Ok().content_type("text/html").body(rendered)
+}
+async fn performance(
+    query: web::Query<IndexQueryParams>,
+    req: HttpRequest,
+    tmpl: web::Data<Tera>,
+) -> impl Responder {
+    let mut ctx = tera::Context::new();
+
+
+    let (
+        callsign,
+        pilot,
+        passenger,
+        baggage,
+        fuel_quantity,
+        fuel_type,
+        fuel_quantity_type,
+        _,
+        oat,
+        pressure_altitude,
+        wind,
+        wind_direction,
+        submit,
+    ) = parse_query(query);
+
+    ctx.insert("callsign", &callsign);
+    ctx.insert("pilot", &pilot);
+    ctx.insert("passenger", &passenger);
+    ctx.insert("baggage", &baggage);
+    ctx.insert("oat", &oat);
+    ctx.insert("pressure_altitude", &pressure_altitude);
+    ctx.insert("wind", &wind);
+    ctx.insert("wind_direction", &wind_direction);
+    ctx.insert(
+        "fuel_quantity",
+        &format!("{:.2}", &fuel_quantity).parse::<f64>().unwrap(),
+    );
+    ctx.insert("fuel_type", &fuel_type);
+    ctx.insert("fuel_quantity_type", &fuel_quantity_type);
+    ctx.insert("fuel_option", "manual");
+    ctx.insert("stepper_oob_swap", &true);
+
+    if submit.eq("Vorige") {
+        let rendered = tmpl.render("wb_form.html", &ctx).unwrap();
+        return HttpResponse::Ok().content_type("text/html").body(rendered);
+    }
+
+    ctx.insert("step3", &true);
+    ctx.insert(
+        "print_url",
+        &format!("/print?{}", req.query_string()),
+    );
+
+    let rendered = tmpl.render("export_form.html", &ctx).unwrap();
+    HttpResponse::Ok().content_type("text/html").body(rendered)
 }
 
 async fn print(
@@ -694,6 +856,7 @@ async fn print(
         pressure_altitude,
         wind,
         wind_direction,
+        _,
     ) = parse_query(query);
 
     let plane = build_plane(
@@ -782,6 +945,7 @@ async fn index(
             pressure_altitude,
             wind,
             wind_direction,
+            _,
         ) = parse_query(query);
 
         let plane = build_plane(
@@ -878,11 +1042,14 @@ async fn index(
         ctx.insert("todr", &format!("{:.0}", tod_dr));
 
         ctx.insert("wb_table", &weight_and_balance_table_strings(plane));
+        ctx.insert("stepper_oob_swap", &true);
+        ctx.insert("step2", &true);
 
-        "wb_form.html"
+        "performance_form.html"
     } else {
         ctx.insert("show_image", &false);
         ctx.insert("fuel_option", "auto");
+        ctx.insert("skip_stepper", &true);
         "index.html"
     };
 
@@ -1044,6 +1211,7 @@ fn parse_query(
     f64,
     f64,
     String,
+    String,
 ) {
     let query_params = query.into_inner();
     let callsign = query_params.callsign.expect("calsign must be present.");
@@ -1054,7 +1222,7 @@ fn parse_query(
         .parse()
         .unwrap_or_default();
     let baggage: f64 = query_params
-        .bagage
+        .baggage
         .unwrap_or_default()
         .parse()
         .unwrap_or_default();
@@ -1082,6 +1250,7 @@ fn parse_query(
     let wind_direction = query_params
         .wind_direction
         .unwrap_or_else(|| "headwind".to_string());
+    let submit = query_params.submit.unwrap_or_default();
     (
         callsign,
         pilot,
@@ -1095,6 +1264,7 @@ fn parse_query(
         pressure_altitude,
         wind,
         wind_direction,
+        submit,
     )
 }
 
@@ -1111,6 +1281,7 @@ async fn wb_table(query: web::Query<IndexQueryParams>, _tmpl: web::Data<Tera>) -
         fuel_type,
         fuel_quantity_type,
         fuel_option,
+        _,
         _,
         _,
         _,
@@ -1151,6 +1322,7 @@ async fn wb_chart(query: web::Query<IndexQueryParams>, _tmpl: web::Data<Tera>) -
         fuel_type,
         fuel_quantity_type,
         fuel_option,
+        _,
         _,
         _,
         _,
@@ -1199,6 +1371,8 @@ async fn main() -> std::io::Result<()> {
             .route("/print", web::get().to(print))
             .route("/perf-tod", web::get().to(perf_tod))
             .route("/perf-ldr", web::get().to(perf_ldr))
+            .route("/performance", web::get().to(performance))
+            .route("/export", web::get().to(export))
     })
     .bind("0.0.0.0:80")?
     .run()
