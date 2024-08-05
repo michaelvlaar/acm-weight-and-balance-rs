@@ -1,3 +1,5 @@
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E2114NN8)
+
 # ACM Weight And Balance
 
 ACM Weight And Balance is an open source project designed to simplify the calculation and management of weight and balance for an aeroclub fleet. It combines a reliable Rust-based HTTP backend with a straightforward HTMX frontend, enabling pilots to perform quick and accurate weight and balance calculations. The project aims to improve operational safety and efficiency within aeroclubs and is open to community contributions.
