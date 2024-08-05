@@ -57,6 +57,14 @@ struct WindOptionQueryParams {
 #[folder = "templates/"]
 struct Templates;
 
+async fn health_check() -> impl Responder {
+    HttpResponse::Ok().body("OK")
+}
+
+async fn readiness_check() -> impl Responder {
+    HttpResponse::Ok().body("Ready")
+}
+
 fn calculate_aquila_performance_ldr(
     query_params: PerfQueryParams,
 ) -> (f64, f64, f64, f64, f64, f64, f64, f64, f64) {
@@ -1413,6 +1421,8 @@ async fn main() -> std::io::Result<()> {
             .route("/perf-ldr", web::get().to(perf_ldr))
             .route("/performance", web::get().to(performance))
             .route("/export", web::get().to(export))
+            .route("/health", web::get().to(health_check)) 
+            .route("/ready", web::get().to(readiness_check))
     })
     .bind("0.0.0.0:80")?
     .run()
