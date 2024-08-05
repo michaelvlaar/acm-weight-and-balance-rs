@@ -1,4 +1,13 @@
-# [](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.12...v) (2024-08-05)
+# [](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.13...v) (2024-08-05)
+
+
+
+## [0.1.13](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.12...v0.1.13) (2024-08-05)
+
+
+### Features
+
+* k8s health and ready probe ([bc61bcf](https://github.com/michaelvlaar/acm-weight-and-balance-rs/commit/bc61bcf8de9d00fdadb85d3cb659ed132de06b8e))
 
 
 
