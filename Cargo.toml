@@ -4,7 +4,7 @@ version = "0.1.13"
 edition = "2021"
 
 [dependencies]
-airplane = {path = "../aeroclub/airplane" }  
+airplane = "0.1.7" 
 actix-web = "4"
 tera = "1.12"
 serde = { version = "1.0", features = ["derive"] }

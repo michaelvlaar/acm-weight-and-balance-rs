@@ -234,7 +234,9 @@ dependencies = [
 
 [[package]]
 name = "airplane"
-version = "0.1.6"
+version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bba8d064e5e258ea9f8dec8e90431b1a5dde3ec7ce1186340bfd7af82c3f2626"
 dependencies = [
  "plotters",
 ]
