@@ -1,4 +1,18 @@
-# [](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.13...v) (2024-08-05)
+# [](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.14...v) (2024-08-12)
+
+
+
+## [0.1.14](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.13...v0.1.14) (2024-08-12)
+
+
+### Bug Fixes
+
+* lighthouse optimalizations ([0cd4fa8](https://github.com/michaelvlaar/acm-weight-and-balance-rs/commit/0cd4fa8b2f93121a003bfbec1234c1e616a63e8b))
+
+
+### Features
+
+* fuel calculation ([1b2b588](https://github.com/michaelvlaar/acm-weight-and-balance-rs/commit/1b2b588dd447234eafe332f3f396b971180fa3db))
 
 
 
