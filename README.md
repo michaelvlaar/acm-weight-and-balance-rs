@@ -15,7 +15,8 @@ ACM Weight And Balance is an open source project designed to simplify the calcul
 - [ ] Show document references (which documents / versions)
 - [ ] Server side error messages for form validation (currently not working properly on Firefox)
 - [ ] Option to remember / save form input values
-- [ ] Fuel planning / endurance (based on trip / alternate distance) 
+- [ ] Fuel planning / endurance (based on trip / alternate distance)
+- [ ] Negative PA support in performance calculations
 
 ## Changelog
 
