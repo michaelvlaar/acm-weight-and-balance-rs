@@ -1,42 +1,46 @@
-<form hx-get="/export" hx-swap="outerHTML" id="main-form" class="w-full">
-    {% include "state.html" %} 
+<div id="content-container" class="w-full flex flex-col">
+    {% include "stepper.html" %}
+    <form hx-get="/export" hx-swap="outerHTML" hx-target="#content-container" id="main-form" class="w-full">
+        {% include "state.html" %}
 
-    <div class="text-center mt-2">
-        <h1 class="text-2xl uppercase font-bold">Opslaan</h1>
-    </div>
-    <div class="mb-4 w-full mt-4">
-        <label for="export-name" class="uppercase block text-gray-700 font-bold mb-2">Document Referentie</label>
-        <input type="string" placeholder="Document referentie" id="export-name"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
->
-    </div>
-    <div class="mt-4 flex items-center justify-between">
-        <input name="submit" value="Vorige" type="submit" class="mr-1 w-full bg-gray-200 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        <button id="btn-print" class="w-full bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Opslaan</button>
-    </div>
-    <div class="flex w-full mt-12 items-center justify-between">
-        <iframe id='kofiframe' src='https://ko-fi.com/michaelvlaar/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:4px;background:#fff;' height='712' title='michaelvlaar'></iframe>
-    </div>
-    <iframe id="print-frame" style="display: none;"></iframe>
-    <script>
-        document.getElementById('btn-print').addEventListener('click', function (event) {
-            event.preventDefault();
-
-            const iframe = document.getElementById('print-frame');
-            iframe.src = '{{ print_url | safe }}&' + 'reference=' + document.getElementById("export-name").value;
-
-            iframe.onload = function () {
-                iframe.contentWindow.print();
-            };
-        }
-        );
-
-        document.getElementById('main-form').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
+        <div class="text-center mt-2">
+            <h1 class="text-2xl uppercase font-bold">Opslaan</h1>
+        </div>
+        <div class="mb-4 w-full mt-4">
+            <label for="export-name" class="uppercase block text-gray-700 font-bold mb-2">Document Referentie</label>
+            <input type="string" placeholder="Document referentie" id="export-name"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="mt-4 flex items-center justify-between">
+            <input name="submit" value="Vorige" type="submit"
+                class="mr-1 w-full bg-gray-200 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <button id="btn-print"
+                class="w-full bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Opslaan</button>
+        </div>
+        <div class="flex w-full mt-12 items-center justify-between">
+            <iframe id='kofiframe'
+                src='https://ko-fi.com/michaelvlaar/?hidefeed=true&widget=true&embed=true&preview=true'
+                style='border:none;width:100%;padding:4px;background:#fff;' height='712' title='michaelvlaar'></iframe>
+        </div>
+        <iframe id="print-frame" style="display: none;"></iframe>
+        <script>
+            document.getElementById('btn-print').addEventListener('click', function (event) {
                 event.preventDefault();
-            }
-        });
-    </script>
-</form>
 
-{% include "stepper.html" %}
+                const iframe = document.getElementById('print-frame');
+                iframe.src = '{{ print_url | safe }}&' + 'reference=' + document.getElementById("export-name").value;
+
+                iframe.onload = function () {
+                    iframe.contentWindow.print();
+                };
+            }
+            );
+
+            document.getElementById('main-form').addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                }
+            });
+        </script>
+    </form>
+</div>

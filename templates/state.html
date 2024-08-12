@@ -1,42 +1,53 @@
-{% if callsign is defined %}
-<input type="hidden" name="callsign" value="{{ callsign }}" />
+{% if step != "input" %}
+    {% if callsign is defined %}
+    <input type="hidden" name="callsign" value="{{ callsign }}" />
+    {% endif %}
+    {% if pilot is defined %}
+    <input type="hidden" name="pilot" value="{{ pilot }}" />
+    {% endif %}
+    {% if pilot_seat is defined %}
+    <input type="hidden" name="pilot_seat" value="{{ pilot_seat }}" />
+    {% endif %}
+    {% if passenger is defined %}
+    <input type="hidden" name="passenger" value="{{ passenger }}" />
+    {% endif %}
+    {% if passenger_seat is defined %}
+    <input type="hidden" name="passenger_seat" value="{{ passenger_seat }}" />
+    {% endif %}
+    {% if baggage is defined %}
+    <input type="hidden" name="baggage" value="{{ baggage }}" />
+    {% endif %}
+    {% if oat is defined %}
+    <input type="hidden" name="oat" value="{{ oat }}" />
+    {% endif %}
+    {% if pressure_altitude is defined %}
+    <input type="hidden" name="pressure_altitude" value="{{ pressure_altitude }}" />
+    {% endif %}
+    {% if wind is defined %}
+    <input type="hidden" name="wind" value="{{ wind }}" />
+    {% endif %}
+    {% if wind_direction is defined %}
+    <input type="hidden" name="wind_direction" value="{{ wind_direction }}" />
+    {% endif %}
 {% endif %}
-{% if pilot is defined %}
-<input type="hidden" name="pilot" value="{{ pilot }}" />
-{% endif %}
-{% if pilot_seat is defined %}
-<input type="hidden" name="pilot_seat" value="{{ pilot_seat }}" />
-{% endif %}
-{% if passenger is defined %}
-<input type="hidden" name="passenger" value="{{ passenger }}" />
-{% endif %}
-{% if passenger_seat is defined %}
-<input type="hidden" name="passenger_seat" value="{{ passenger_seat }}" />
-{% endif %}
-{% if baggage is defined %}
-<input type="hidden" name="baggage" value="{{ baggage }}" />
-{% endif %}
-{% if fuel_type is defined %}
-<input type="hidden" name="fuel_type" value="{{ fuel_type }}" />
-{% endif %}
-{% if fuel_option is defined %}
-<input type="hidden" name="fuel_option" value="{{ fuel_option }}" />
-{% endif %}
-{% if fuel_quantity is defined %}
-<input type="hidden" name="fuel_quantity" value="{{ fuel_quantity }}" />
-{% endif %}
-{% if fuel_quantity_type is defined %}
-<input type="hidden" name="fuel_quantity_type" value="{{ fuel_quantity_type }}" />
-{% endif %}
-{% if oat is defined %}
-<input type="hidden" name="oat" value="{{ oat }}" />
-{% endif %}
-{% if pressure_altitude is defined %}
-<input type="hidden" name="pressure_altitude" value="{{ pressure_altitude }}" />
-{% endif %}
-{% if wind is defined %}
-<input type="hidden" name="wind" value="{{ wind }}" />
-{% endif %}
-{% if wind_direction is defined %}
-<input type="hidden" name="wind_direction" value="{{ wind_direction }}" />
+
+{% if step != "fuel" %}
+    {% if fuel_type is defined %}
+    <input type="hidden" name="fuel_type" value="{{ fuel_type }}" />
+    {% endif %}
+    {% if fuel_unit is defined %}
+    <input type="hidden" name="fuel_unit" value="{{ fuel_unit }}" />
+    {% endif %}
+    {% if trip_duration is defined %}
+    <input type="hidden" name="trip_duration" value="{{ trip_duration }}" />
+    {% endif %}
+    {% if alternate_duration is defined %}
+    <input type="hidden" name="alternate_duration" value="{{ alternate_duration }}" />
+    {% endif %}
+    {% if fuel_max is defined %}
+    <input type="hidden" name="fuel_max" value="{{ fuel_max }}" />
+    {% endif %}
+    {% if fuel_extra is defined %}
+    <input type="hidden" name="fuel_extra" value="{{ fuel_extra }}" />
+    {% endif %}
 {% endif %}

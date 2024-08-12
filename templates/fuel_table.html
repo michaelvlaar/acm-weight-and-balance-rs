@@ -1,0 +1,125 @@
+{% if print is defined and print == true %}
+<table class="w-1/2">
+    <thead>
+        <tr>
+            <th>
+                Brandstofcategorie
+            </th>
+            <th>
+                &nbsp;
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Taxi
+                Brandstof</td>
+            <td>{{ fuel_taxi }}</td>
+        </tr>
+        <tr>
+            <td>Reisbrandstof (17L/H)</td>
+            <td>{{ fuel_trip }}</td>
+        </tr>
+        <tr>
+            <td>Onvoorziene brandstof (10%)</td>
+            <td>{{ fuel_contigency }}</td>
+        </tr>
+        <tr>
+            <td>Branstof alternatieve luchthaven</td>
+            <td>{{ fuel_alternate }}</td>
+        </tr>
+        <tr>
+            <td>Eindreservebrandstof (45&nbsp;minuten)</td>
+            <td>{{ fuel_reserve }}</td>
+        </tr>
+        <tr>
+            <td>Extra brandstof</td>
+            <td>{{ fuel_additional }}</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Totaal</th>
+            <th>{{ fuel_total }}</th>
+        </tr>
+    </tfoot>
+</table>
+{% else %}
+<table class="border border-gray divide-y divide-gray-200">
+    <thead class="bg-gray-200">
+        <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                Brandstofcategorie
+            </th>
+            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">
+                &nbsp;
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="table-row">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Taxi
+                Brandstof</th>
+            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{
+                fuel_taxi
+                }}</td>
+        </tr>
+        <tr class="table-row bg-gray-50">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                Reisbrandstof (17L/h)</th>
+            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{
+                fuel_trip
+                }}
+            </td>
+        </tr>
+        <tr class="table-row">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                Onvoorziene brandstof (10%)</th>
+            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{
+                fuel_contigency }}
+            </td>
+        </tr>
+        <tr class="table-row bg-gray-50">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                Brandstof alternatieve luchthaven</th>
+            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{
+                fuel_alternate }}
+            </td>
+        </tr>
+        <tr class="table-row">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                Eindreservebrandstof (45&nbsp;minuten)</th>
+            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{
+                fuel_reserve }}
+            </td>
+        </tr>
+        {% if fuel_sufficient == false %}
+        <tr class="table-row bg-red-100">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                Extra brandstof</th>
+            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{
+                fuel_additional }}
+            </td>
+        </tr>
+        {% else %}
+        <tr class="table-row bg-gray-50">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                Extra brandstof</th>
+            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{
+                fuel_additional }}
+            </td>
+        </tr>
+        {% endif %}
+    </tbody>
+    <tfoot class="bg-gray-200">
+        <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                Totaal
+            </th>
+            <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900 text-center">{{
+                fuel_total }}
+            </td>
+        </tr>
+    </tfoot>
+</table>
+{% endif %}

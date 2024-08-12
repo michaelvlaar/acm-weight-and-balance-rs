@@ -1,55 +1,83 @@
-{% if stepper_oob_swap is defined %}
-<div id="stepper" hx-swap-oob="true" class="flex w-full mb-4">
-{% else %}
 <div id="stepper" class="flex w-full mb-4">
-{% endif %}
-
-<div class="flex w-full">
+    <div class="flex w-full">
         <ul class="w-full relative flex flex-row">
             <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group">
                 <div class="min-h-7 inline-flex justify-center items-center text-xs align-middle">
-                    {% if step2 is defined or step3 is defined %}
-                    <form class="flex w-full" hx-get="/performance" hx-target="#main-form" hx-swap="outerHTML">
+                    {% if step != "index" %}
+                    <form class="flex w-full" hx-get="/fuel" hx-target="#content-container"
+                        hx-swap="outerHTML show:top">
                         {% include "state.html" %}
                         <input type="hidden" name="submit" value="Vorige" />
                         <button type="submit"
                             class="bg-indigo-600 flex justify-center items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
                             <span class="material-icons text-white p-2">create</span>
                         </button>
-                        <button type="submit" class="ml-2 ms-2 hidden sm:block text-sm font-medium text-gray-800 dark:text-white">
+                        <button type="submit"
+                            class="ml-2 ms-2 hidden sm:block text-sm font-medium text-gray-800 dark:text-white">
                             Invoeren
                         </button>
-                        {% else %}
-                        <span 
-                            class="bg-indigo-600 flex justify-center items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
-                            <span class="material-icons text-white p-2">create</span>
-                        </span>
-                        <span class="ml-2 ms-2 hidden sm:block text-sm font-medium text-gray-800 dark:text-white">
-                            Invoeren
-                        </span>
                     </form>
+                    {% else %}
+                    <span
+                        class="bg-indigo-600 flex justify-center items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
+                        <span class="material-icons text-white p-2">create</span>
+                    </span>
+                    <span class="ml-2 ms-2 hidden sm:block text-sm font-medium text-gray-800 dark:text-white">
+                        Invoeren
+                    </span>
                     {% endif %}
                 </div>
                 <div class="mr-2 w-full h-px flex-1 bg-gray-400 group-last:hidden dark:bg-neutral-700"></div>
             </li>
             <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group">
                 <div class="min-w-7 min-h-7 inline-flex justify-center items-center text-xs align-middle">
-                    {% if step3 is defined  %}
-                    <form class="flex w-full" hx-get="/export" hx-target="#main-form" hx-swap="outerHTML">
+                    {% if step == "fuel" or step == "calculation" or step == "export" %}
+                    <form class="flex w-full" hx-get="/calculations" hx-target="#content-container"
+                        hx-swap="outerHTML show:top">
+                        {% include "state.html" %}
+                        <input type="hidden" name="submit" value="Vorige" />
+                        <button type="submit"
+                            class="bg-indigo-600 size-7 flex justify-center items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
+                            <span class="material-icons text-white p-2">local_gas_station</span>
+                        </button>
+                        <button type="submit"
+                            class="ml-2 ms-2 hidden sm:block text-sm font-medium text-gray-800 dark:text-white">
+                            Brandstof
+                        </button>
+                    </form>
+                    {% else %}
+                    <span
+                        class="{% if step2 is defined or step3 is defined %}bg-indigo-600 {% endif %}size-7 flex justify-center items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
+                        <span
+                            class="material-icons {% if step2 is defined or step3 is defined %}text-white {% endif %}p-2">local_gas_station</span>
+                    </span>
+                    <span class="ml-2 ms-2 hidden sm:block text-sm font-medium text-gray-800 dark:text-white">
+                        Brandstof
+                    </span>
+                    {% endif %}
+                </div>
+                <div class="mr-2 w-full h-px flex-1 bg-gray-400 group-last:hidden dark:bg-neutral-700"></div>
+            </li>
+            <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group">
+                <div class="min-w-7 min-h-7 inline-flex justify-center items-center text-xs align-middle">
+                    {% if step == "calculation" or step == "export" %}
+                    <form class="flex w-full" hx-get="/export" hx-target="#content-container" hx-swap="outerHTML shop:top">
                         {% include "state.html" %}
                         <input type="hidden" name="submit" value="Vorige" />
                         <button type="submit"
                             class="bg-indigo-600 size-7 flex justify-center items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
                             <span class="material-icons text-white p-2">bar_chart</span>
                         </button>
-                        <button type="submit" class="ml-2 ms-2 hidden sm:block text-sm font-medium text-gray-800 dark:text-white">
+                        <button type="submit"
+                            class="ml-2 ms-2 hidden sm:block text-sm font-medium text-gray-800 dark:text-white">
                             Berekeningen
                         </button>
                     </form>
                     {% else %}
                     <span
                         class="{% if step2 is defined or step3 is defined %}bg-indigo-600 {% endif %}size-7 flex justify-center items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
-                        <span class="material-icons {% if step2 is defined or step3 is defined %}text-white {% endif %}p-2">bar_chart</span>
+                        <span
+                            class="material-icons {% if step2 is defined or step3 is defined %}text-white {% endif %}p-2">bar_chart</span>
                     </span>
                     <span class="ml-2 ms-2 hidden sm:block text-sm font-medium text-gray-800 dark:text-white">
                         Berekeningen
@@ -60,9 +88,10 @@
             </li>
             <li class="flex items-center shrink basis-0 group">
                 <div class="min-w-7 min-h-7 inline-flex justify-center items-center text-xs align-middle">
-                    <span
-                        class="{% if step3 is defined %}bg-indigo-600 {% endif %}size-7 flex justify-center items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
-                        <span class="material-icons p-2 {% if step3 is defined %}text-white{% endif %}">save_alt</span>
+                    <span class="{% if step == "export" %}bg-indigo-600 {% endif %}size-7 flex justify-center
+                        items-center shrink-0 bg-white border border-gray-400 font-medium text-gray-800 rounded-full
+                        dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
+                        <span class="material-icons p-2 {% if step == "export" %}text-white{% endif %}">save_alt</span>
                     </span>
                     <span class="ml-2 ms-2 hidden sm:block text-sm font-medium text-gray-800 dark:text-white">
                         Opslaan

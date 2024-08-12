@@ -8,15 +8,17 @@ pub struct IndexQueryParams {
     pub passenger: Option<String>,
     pub passenger_seat: Option<String>,
     pub baggage: Option<String>,
-    pub fuel_option: Option<String>,
-    pub fuel_quantity: Option<String>,
-    pub fuel_type: Option<String>,
-    pub fuel_quantity_type: Option<String>,
-    pub reference: Option<String>,
     pub oat: Option<f64>,
     pub pressure_altitude: Option<f64>,
     pub wind: Option<f64>,
     pub wind_direction: Option<String>,
+    pub fuel_type: Option<String>,
+    pub fuel_unit: Option<String>,
+    pub fuel_extra: Option<String>,
+    pub fuel_max: Option<String>,
+    pub trip_duration: Option<String>,
+    pub alternate_duration: Option<String>,
+    pub reference: Option<String>,
     pub submit: Option<String>,
 }
 
@@ -31,10 +33,8 @@ pub struct PerfQueryParams {
 
 #[derive(Deserialize)]
 pub struct FuelOptionQueryParams {
-    pub fuel_option: Option<String>,
-    pub fuel_quantity: Option<String>,
+    pub fuel_max: Option<String>,
     pub fuel_type: Option<String>,
-    pub fuel_quantity_type: Option<String>,
 }
 
 #[derive(Deserialize)]

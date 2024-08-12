@@ -1,0 +1,17 @@
+<div class="mb-4 flex w-full flex-col" id="max-fuel-container">
+    <div class="uppercase block text-gray-700 font-bold mb-2">Beschikbare Brandstof</div>
+    <div class="flex items-center mb-2">
+        <input type="checkbox" id="max-fuel" name="fuel_max" hx-target="#max-fuel-container" hx-swap="outerHTML"
+            value="max" {% if fuel_max is defined and fuel_max=="max" %}checked{% endif %}
+            class="h-5 w-5 text-white bg-indigo-600 border-none rounded focus:ring-indigo-500"
+            hx-option="input[name=fuel_max]" hx-get="/fuel-option" hx-trigger="change">
+        <label for="max-fuel" class="ml-2 block text-gray-700 font-bold">Aanvullen tot
+            maximum</label>
+    </div>
+
+    {% if fuel_max is undefined or fuel_max != "max" %}
+    <input required min="0" step=".1"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        {% if fuel_extra is defined %}value={{fuel_extra}}{% endif %} type="number" name="fuel_extra" placeholder="Totaal brandstof">
+    {% endif %}
+</div>

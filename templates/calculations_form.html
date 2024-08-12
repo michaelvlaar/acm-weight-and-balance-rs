@@ -1,0 +1,55 @@
+<div id="content-container" class="w-full flex flex-col">
+    {% include "stepper.html" %}
+    <form hx-get="/export" id="main-form" hx-swap="outerHTML show:#content-container:top" hx-target="#content-container"
+        class="w-full flex flex-col">
+        {% include "state.html" %}
+        <div class="text-center mb-2 mt-2">
+            <h1 class="text-xl font-bold uppercase">Brandstofplanning</h1>
+        </div>
+        <div class="mb-4 flex w-full flex-col">
+            {% if fuel_sufficient == false %}
+            <div class="mt-4 mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+                <p class="text-sm">
+                    De huidige brandstofvoorraad van {{ fuel_total }} is onvoldoende om de geplande vlucht veilig uit te
+                    voeren. Er moet minimaal {{ fuel_additional_abs }} extra brandstof worden bijgetankt om te voldoen
+                    aan de
+                    veiligheidsvoorschriften.
+                </p>
+            </div>
+            {% endif %}
+            {% include "fuel_table.html" %}
+        </div>
+        <div class="text-center mb-2 mt-2">
+            <h1 class="text-xl font-bold uppercase">Gewicht en Balans</h1>
+        </div>
+
+        {% if wb_within_limits == false %}
+        <div class="mt-4 mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+            <p class="text-sm">
+                De huidige gewichts- en balansberekening geeft aan dat de belading van het vliegtuig buiten de
+                toegestane limieten valt. Controleer en herbereken de gewichts- en balansverdeling zorgvuldig om te
+                voldoen aan de veiligheidsvoorschriften.
+            </p>
+
+        </div>
+        {% endif %}
+        <img src="{{ wb_chart_image_url | safe }}" alt="Chart" class="w-full mb-2 sm:w-1/2">
+        {% include "wb_table.html" %}
+
+        <div class="text-center mt-8">
+            <h1 class="text-2xl font-bold uppercase">Prestaties</h1>
+        </div>
+
+        <img src="{{ perf_chart_tod_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
+        <img src="{{ perf_chart_ldr_image_url | safe }}" alt="Chart" class="w-100 h-100 lg:w-100 lg:h-100 mb-2">
+
+        {% include "performance_table.html" %}
+
+        <div class="mt-4 flex items-center justify-between">
+            <input name="submit" value="Vorige" type="submit"
+                class="mr-1 w-full bg-gray-200 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <input name="submit" value="Volgende" type="submit"
+                class="w-full bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        </div>
+    </form>
+</div>

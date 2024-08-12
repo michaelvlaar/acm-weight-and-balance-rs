@@ -1,5 +1,5 @@
-use actix_web::web;
 use crate::models::query_params::IndexQueryParams;
+use actix_web::web;
 
 pub fn parse_query(
     query: web::Query<IndexQueryParams>,
@@ -33,20 +33,6 @@ pub fn parse_query(
         .unwrap_or_default()
         .parse()
         .unwrap_or_default();
-    let fuel_quantity: f64 = query_params
-        .fuel_quantity
-        .unwrap_or_default()
-        .parse()
-        .unwrap_or_default();
-    let fuel_type = query_params
-        .fuel_type
-        .expect("fuel type should be present.");
-    let fuel_quantity_type = query_params
-        .fuel_quantity_type
-        .expect("fuel quantity type should be present.");
-    let fuel_option = query_params
-        .fuel_option
-        .unwrap_or_else(|| "manual".to_string());
     let oat = query_params
         .oat
         .expect("outside air temperature should be present.");
@@ -58,9 +44,7 @@ pub fn parse_query(
         .wind_direction
         .unwrap_or_else(|| "headwind".to_string());
     let submit = query_params.submit.unwrap_or_default();
-    let pilot_seat = query_params
-        .pilot_seat
-        .unwrap_or_else(|| "m".to_string());
+    let pilot_seat = query_params.pilot_seat.unwrap_or_else(|| "m".to_string());
     let passenger_seat = query_params
         .passenger_seat
         .unwrap_or_else(|| "m".to_string());
@@ -71,10 +55,10 @@ pub fn parse_query(
         passenger,
         passenger_seat,
         baggage,
-        fuel_quantity,
-        fuel_type,
-        fuel_quantity_type,
-        fuel_option,
+        0.0,
+        "mogas".to_string(),
+        "liter".to_string(),
+        "auto".to_string(),
         oat,
         pressure_altitude,
         wind,
@@ -82,3 +66,4 @@ pub fn parse_query(
         submit,
     )
 }
+

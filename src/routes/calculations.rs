@@ -1,64 +1,278 @@
-use actix_web::{web, HttpRequest, HttpResponse, Responder};
-use airplane::visualizer::{WeightBalanceChartVisualization, WeightBalanceTableVisualization};
+use core::panic;
+use std::time::Duration;
+
+use actix_web::{http::header::ContentEncoding, web, HttpRequest, HttpResponse, Responder};
+use airplane::{
+    types::VolumeType,
+    visualizer::{WeightBalanceChartVisualization, WeightBalanceTableVisualization},
+    weight_and_balance::Volume,
+};
 use tera::Tera;
 
 use crate::{
-    models::query_params::{IndexQueryParams, PerfQueryParams},
-    utils::{parser::parse_query, plane::build_plane},
+    models::{
+        query_params::{IndexQueryParams, PerfQueryParams},
+        state::{duration_to_hh_mm, ApplicationState},
+    },
+    utils::plane,
 };
 
-pub async fn performance(
+pub async fn calculations(
     query: web::Query<IndexQueryParams>,
-    req: HttpRequest,
     tmpl: web::Data<Tera>,
 ) -> impl Responder {
     let mut ctx = tera::Context::new();
-    let (
-        callsign,
-        pilot,
-        pilot_seat,
-        passenger,
-        passenger_seat,
-        baggage,
-        fuel_quantity,
-        fuel_type,
-        fuel_quantity_type,
-        _,
-        oat,
-        pressure_altitude,
-        wind,
-        wind_direction,
-        submit,
-    ) = parse_query(query);
+    let (app_state, query) = ApplicationState::from_query_params(query.into_inner());
 
-    ctx.insert("callsign", &callsign);
-    ctx.insert("pilot", &pilot);
-    ctx.insert("pilot_seat", &pilot_seat);
-    ctx.insert("passenger", &passenger);
-    ctx.insert("passenger_seat", &passenger_seat);
-    ctx.insert("baggage", &baggage);
-    ctx.insert("oat", &oat);
-    ctx.insert("pressure_altitude", &pressure_altitude);
-    ctx.insert("wind", &wind);
-    ctx.insert("wind_direction", &wind_direction);
-    ctx.insert(
-        "fuel_quantity",
-        &format!("{:.2}", &fuel_quantity).parse::<f64>().unwrap(),
-    );
-    ctx.insert("fuel_type", &fuel_type);
-    ctx.insert("fuel_quantity_type", &fuel_quantity_type);
-    ctx.insert("fuel_option", "manual");
-    ctx.insert("stepper_oob_swap", &true);
-
-    if submit.eq("Vorige") {
-        let rendered = tmpl.render("wb_form.html", &ctx).unwrap();
-        return HttpResponse::Ok().content_type("text/html").body(rendered);
+    match query.submit {
+        Some(s) if s == "Vorige" => {
+            app_state.apply("fuel", &mut ctx);
+            let rendered = tmpl.render("fuel_form.html", &ctx).unwrap();
+            return HttpResponse::Ok().content_type("text/html").body(rendered);
+        }
+        _ => (),
     }
 
-    ctx.insert("step3", &true);
-    ctx.insert("print_url", &format!("/print?{}", req.query_string()));
-
     let rendered = tmpl.render("export_form.html", &ctx).unwrap();
+    HttpResponse::Ok().content_type("text/html").body(rendered)
+}
+
+pub fn render_calculations(
+    app_state: &ApplicationState,
+    ctx: &mut tera::Context,
+    req: HttpRequest,
+    tmpl: web::Data<Tera>,
+    template: &str,
+) -> HttpResponse {
+    let plane = plane::build_plane(
+        app_state.callsign.clone().unwrap(),
+        app_state.pilot_moment.clone().unwrap(),
+        app_state.passenger_moment.clone(),
+        app_state.baggage_moment.clone(),
+        app_state.fuel_type.clone().unwrap(),
+        app_state.fuel_unit.clone().unwrap(),
+        app_state.fuel_extra.clone(),
+        app_state.fuel_max.unwrap_or_default(),
+        app_state.trip_duration.unwrap(),
+        app_state.alternate_duration.unwrap(),
+    );
+
+    app_state.apply("calculation", ctx);
+
+    if let Some(fuel_moment) = plane.moments().last() {
+        let fuel_mass = fuel_moment.mass();
+
+        let fuel_liters = match fuel_mass {
+            airplane::weight_and_balance::Mass::Mogas(v)
+            | airplane::weight_and_balance::Mass::Avgas(v) => v.to_liter(),
+            _ => panic!("should be a fuel"),
+        };
+
+        let taxi = match app_state.fuel_unit {
+            Some(VolumeType::Liter) => Volume::Liter(2.0),
+            Some(VolumeType::Gallon) => Volume::Gallon(Volume::Liter(2.0).to_gallon()),
+            None => panic!("should never be none"),
+        };
+
+        let reserve = match app_state.fuel_unit {
+            Some(VolumeType::Liter) => Volume::Liter(17.0 * 0.75),
+            Some(VolumeType::Gallon) => Volume::Gallon(Volume::Liter(17.0 * 0.75).to_gallon()),
+            None => panic!("should never be none"),
+        };
+
+        let trip = match app_state.fuel_unit {
+            Some(VolumeType::Liter) => Volume::Liter(
+                17.0 * (app_state
+                    .trip_duration
+                    .expect("should have duration")
+                    .as_secs_f64()
+                    / 60.0
+                    / 60.0),
+            ),
+            Some(VolumeType::Gallon) => Volume::Gallon(
+                Volume::Liter(
+                    17.0 * (app_state
+                        .trip_duration
+                        .expect("should have duration")
+                        .as_secs_f64()
+                        / 60.0
+                        / 60.0),
+                )
+                .to_gallon(),
+            ),
+            None => panic!("should never be none"),
+        };
+
+        let alternate = match app_state.fuel_unit {
+            Some(VolumeType::Liter) => Volume::Liter(
+                17.0 * (app_state
+                    .alternate_duration
+                    .expect("should have duration")
+                    .as_secs_f64()
+                    / 60.0
+                    / 60.0),
+            ),
+            Some(VolumeType::Gallon) => Volume::Gallon(
+                Volume::Liter(
+                    17.0 * (app_state
+                        .alternate_duration
+                        .expect("should have duration")
+                        .as_secs_f64()
+                        / 60.0
+                        / 60.0),
+                )
+                .to_gallon(),
+            ),
+            None => panic!("should never be none"),
+        };
+
+        let contigency = match app_state.fuel_unit {
+            Some(VolumeType::Liter) => Volume::Liter(trip.to_liter() * 0.1),
+            Some(VolumeType::Gallon) => {
+                Volume::Gallon(Volume::Liter(trip.to_liter() * 0.1).to_gallon())
+            }
+            None => panic!("should never be none"),
+        };
+
+        let extra = match app_state.fuel_unit {
+            Some(VolumeType::Liter) => Volume::Liter(
+                fuel_liters
+                    - taxi.to_liter()
+                    - reserve.to_liter()
+                    - trip.to_liter()
+                    - alternate.to_liter()
+                    - contigency.to_liter(),
+            ),
+            Some(VolumeType::Gallon) => Volume::Gallon(
+                Volume::Liter(
+                    fuel_liters
+                        - taxi.to_liter()
+                        - reserve.to_liter()
+                        - trip.to_liter()
+                        - alternate.to_liter()
+                        - contigency.to_liter(),
+                )
+                .to_gallon(),
+            ),
+            None => panic!("should never be none"),
+        };
+
+        let endurance = Duration::from_secs((fuel_liters / 17.0 * 60.0 * 60.0) as u64);
+
+        ctx.insert("fuel_taxi", &taxi.to_string().replace('.', ","));
+        ctx.insert("fuel_reserve", &reserve.to_string().replace('.', ","));
+        ctx.insert("fuel_trip", &trip.to_string().replace('.', ","));
+        ctx.insert("fuel_alternate", &alternate.to_string().replace('.', ","));
+        ctx.insert("fuel_contigency", &contigency.to_string().replace('.', ","));
+        ctx.insert("fuel_additional", &extra.to_string().replace('.', ","));
+        ctx.insert(
+            "fuel_additional_abs",
+            &match extra {
+                Volume::Gallon(v) => Volume::Gallon(v.abs()),
+                Volume::Liter(v) => Volume::Liter(v.abs()),
+            }
+            .to_string()
+            .replace('.', ","),
+        );
+        ctx.insert(
+            "fuel_sufficient",
+            &match extra {
+                Volume::Gallon(v) | Volume::Liter(v) => v.is_sign_positive(),
+            },
+        );
+
+        ctx.insert(
+            "fuel_total",
+            &match app_state.fuel_unit {
+                Some(VolumeType::Liter) => Volume::Liter(fuel_liters),
+                Some(VolumeType::Gallon) => Volume::Gallon(Volume::Liter(fuel_liters).to_gallon()),
+                _ => panic!("should always have a value"),
+            }
+            .to_string()
+            .replace('.', ","),
+        );
+
+        ctx.insert("fuel_endurance", &duration_to_hh_mm(&endurance));
+    }
+
+    ctx.insert("wb_within_limits", &plane.within_limits());
+
+    let wind = match app_state.wind {
+        Some(w) => w.abs(),
+        None => panic!("wind should be present"),
+    };
+
+    let wind_direction = match app_state.wind {
+        Some(w) => {
+            if w.is_sign_negative() {
+                "tailwind".to_string()
+            } else {
+                "headwind".to_string()
+            }
+        }
+        None => panic!("wind should be present"),
+    };
+
+    let pressure_altitude = match app_state.pressure_altitude {
+        Some(pa) => pa,
+        None => panic!("pressure altitude should be present"),
+    };
+
+    let oat = match app_state.oat {
+        Some(oat) => oat,
+        None => panic!("oat should be present"),
+    };
+
+    let (_, _, _, _, _, _, _, lgrr, ldr) = calculate_aquila_performance_ldr(PerfQueryParams {
+        mtow: plane.total_mass_landing().kilo(),
+        wind,
+        wind_direction: wind_direction.clone(),
+        pressure_altitude,
+        oat,
+    });
+
+    let (_, _, _, _, _, _, _, tod_gr, tod_dr) = calculate_aquila_performance_tod(PerfQueryParams {
+        mtow: plane.total_mass().kilo(),
+        wind,
+        wind_direction,
+        pressure_altitude,
+        oat,
+    });
+
+    ctx.insert("ldr", &format!("{:.0}", ldr));
+    ctx.insert("lgrr", &format!("{:.0}", lgrr));
+    ctx.insert("torr", &format!("{:.0}", tod_gr));
+    ctx.insert("todr", &format!("{:.0}", tod_dr));
+
+    ctx.insert(
+        "perf_chart_tod_image_url",
+        &format!(
+            "/perf-tod?{}&mtow={}",
+            req.query_string(),
+            &plane.total_mass().kilo()
+        ),
+    );
+
+    ctx.insert(
+        "wb_chart_image_url",
+        &format!("/wb-chart?{}", req.query_string()),
+    );
+
+    ctx.insert(
+        "perf_chart_ldr_image_url",
+        &format!(
+            "/perf-ldr?{}&mtow={}",
+            req.query_string(),
+            &plane.total_mass_landing().kilo()
+        ),
+    );
+
+    ctx.insert(
+        "wb_table",
+        &airplane::visualizer::weight_and_balance_table_strings(plane),
+    );
+
+    let rendered = tmpl.render(template, ctx).unwrap();
     HttpResponse::Ok().content_type("text/html").body(rendered)
 }
 
@@ -676,40 +890,20 @@ pub async fn wb_table(
     query: web::Query<IndexQueryParams>,
     _tmpl: web::Data<Tera>,
 ) -> impl Responder {
-    let mut ctx = tera::Context::new();
-    ctx.insert("show_image", &true);
+    let (app_state, _) = ApplicationState::from_query_params(query.into_inner());
 
-    let (
-        callsign,
-        pilot,
-        pilot_seat,
-        passenger,
-        passenger_seat,
-        baggage,
-        fuel_quantity,
-        fuel_type,
-        fuel_quantity_type,
-        fuel_option,
-        _,
-        _,
-        _,
-        _,
-        _,
-    ) = parse_query(query);
-
-    let plane = build_plane(
-        callsign,
-        pilot,
-        pilot_seat,
-        passenger,
-        passenger_seat,
-        baggage,
-        fuel_quantity,
-        fuel_type,
-        fuel_quantity_type,
-        fuel_option,
+    let plane = plane::build_plane(
+        app_state.callsign.unwrap(),
+        app_state.pilot_moment.unwrap(),
+        app_state.passenger_moment,
+        app_state.baggage_moment,
+        app_state.fuel_type.unwrap(),
+        app_state.fuel_unit.unwrap(),
+        app_state.fuel_extra.clone(),
+        app_state.fuel_max.unwrap_or_default(),
+        app_state.trip_duration.unwrap(),
+        app_state.alternate_duration.unwrap(),
     );
-
     match airplane::visualizer::weight_and_balance_table(
         plane,
         WeightBalanceTableVisualization::new((620, 220)),
@@ -720,42 +914,20 @@ pub async fn wb_table(
     };
 }
 
-pub async fn wb_chart(
-    query: web::Query<IndexQueryParams>,
-    _tmpl: web::Data<Tera>,
-) -> impl Responder {
-    let mut ctx = tera::Context::new();
-    ctx.insert("show_image", &true);
+pub async fn wb_chart(query: web::Query<IndexQueryParams>) -> impl Responder {
+    let (app_state, _) = ApplicationState::from_query_params(query.into_inner());
 
-    let (
-        callsign,
-        pilot,
-        pilot_seat,
-        passenger,
-        passenger_seat,
-        baggage,
-        fuel_quantity,
-        fuel_type,
-        fuel_quantity_type,
-        fuel_option,
-        _,
-        _,
-        _,
-        _,
-        _,
-    ) = parse_query(query);
-
-    let plane = build_plane(
-        callsign,
-        pilot,
-        pilot_seat,
-        passenger,
-        passenger_seat,
-        baggage,
-        fuel_quantity,
-        fuel_type,
-        fuel_quantity_type,
-        fuel_option,
+    let plane = plane::build_plane(
+        app_state.callsign.unwrap(),
+        app_state.pilot_moment.unwrap(),
+        app_state.passenger_moment,
+        app_state.baggage_moment,
+        app_state.fuel_type.unwrap(),
+        app_state.fuel_unit.unwrap(),
+        app_state.fuel_extra.clone(),
+        app_state.fuel_max.unwrap_or_default(),
+        app_state.trip_duration.unwrap(),
+        app_state.alternate_duration.unwrap(),
     );
 
     match airplane::visualizer::weight_and_balance_chart(

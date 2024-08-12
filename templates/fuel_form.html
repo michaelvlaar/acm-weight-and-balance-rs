@@ -1,0 +1,80 @@
+<div class="w-full flex flex-col" id="content-container">
+    {% include "stepper.html" %}
+    <form class="w-full mb-2 flex flex-col" id="main-form" hx-get="/fuel" hx-target="#content-container"
+        hx-swap="outerHTML">
+        {% include "state.html" %}
+        <div class="flex flex-col">
+            <div class="mb-4 flex w-full flex-col">
+                <label for="fuel-type" class="uppercase block text-gray-700 font-bold mb-2">Brandstof Type</label>
+                <select aria-label="Type brandstof" id="fuel-type" name="fuel_type"
+                    class="custom-select shadow appearance-none border rounded px-3 py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required>
+                    <option value="mogas" {% if fuel_type is defined and fuel_type=="mogas" %}selected{% endif %}>Mogas
+                    </option>
+                    <option value="avgas" {% if fuel_type is defined and fuel_type=="avgas" %}selected{% endif %}>Avgas
+                    </option>
+                </select>
+            </div>
+            <div class="mb-4 flex w-full flex-col">
+                <label for="fuel-quantity-type" class="uppercase block text-gray-700 font-bold mb-2">Brandstof
+                    Eenheid</label>
+                <select aria-label="Brandstof eenheid" id="fuel-quantity-type" name="fuel_unit"
+                    class="custom-select shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required>
+                    <option value="liter" {% if fuel_unit is defined and fuel_unit=="liter"
+                        %}selected{% endif %}>Liters</option>
+                    <option value="gallon" {% if fuel_unit is defined and fuel_unit=="gallon"
+                        %}selected{% endif %}>Gallons</option>
+                </select>
+            </div>
+            <div class="mb-4 flex w-full flex-col">
+                <label for="trip-duration" class="uppercase block text-gray-700 font-bold mb-2">Reisduur</label>
+                <input id="trip-duration" required type="hidden" name="trip_duration">
+            </div>
+            <div class="mb-4 flex w-full flex-col">
+                <label for="alternate-duration" class="uppercase block text-gray-700 font-bold mb-2">Reisduur alternatieve
+                    luchthaven</label>
+                <input id="alternate-duration" required  type="hidden" name="alternate_duration">
+            </div>
+            {% include "fuel_max_fuel_option.html" %}
+        </div>
+        <div class="flex items-center justify-between">
+            <input name="submit" value="Vorige" type="submit" formnovalidate
+                class="mr-1 w-full bg-gray-200 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <input name="submit" value="Volgende" type="submit"
+                class="w-full bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        </div>
+        <script>
+            flatpickr("#trip-duration", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true,
+                inline: true,
+                defaultDate: "{% if trip_duration is defined %}{{trip_duration}}{% else %}01:00{% endif %}"
+            });
+
+            flatpickr("#alternate-duration", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true,
+                inline: true,
+                defaultDate: "{% if alternate_duration is defined %}{{alternate_duration}}{% else %}00:30{% endif %}"
+            });
+
+            document.getElementById('main-form').addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    document.getElementById('next-button').click();
+                }
+            });
+        </script>
+        <style>
+            #trip-duration,
+            #alternate-duration {
+                display: none;
+            }
+        </style>
+    </form>
+</div>

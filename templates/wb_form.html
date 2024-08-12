@@ -1,91 +1,105 @@
-<form class="w-full mb-2 flex flex-col" id="main-form" hx-get="/" hx-swap="outerHTML show:top">
-    <div class="flex flex-col sm:flex-row">
-        <div class="w-full flex flex-col sm:mr-2">
-            <div class="mb-4"> <label for="callsign" class="uppercase block text-gray-700 font-bold mb-2">Vliegtuig</label>
-                <select id="callsign" name="callsign"
-                    class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
-                    required>
-                    <option value="PHDHA" {% if callsign is defined and callsign=="PHDHA" %}selected{% endif %}>PHDHA</option>
-                    <option value="PHDHB" {% if callsign is defined and callsign=="PHDHB" %}selected{% endif %}>PHDHB</option>
-                </select>
+<div class="w-full flex flex-col" id="content-container">
+    {% include "stepper.html" %}
+    <form class="w-full mb-2 flex flex-col" id="main-form" hx-get="/" hx-target="#content-container"
+        hx-swap="outerHTML show:top">
+        {% include "state.html" %}
+        <div class="flex flex-col sm:flex-row">
+            <div class="w-full flex flex-col sm:mr-2">
+                <div class="mb-4"> <label for="callsign"
+                        class="uppercase block text-gray-700 font-bold mb-2">Vliegtuig</label>
+                    <select id="callsign" name="callsign"
+                        class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                        required>
+                        <option value="PHDHA" {% if callsign is defined and callsign=="PHDHA" %}selected{% endif %}>
+                            PHDHA
+                        </option>
+                        <option value="PHDHB" {% if callsign is defined and callsign=="PHDHB" %}selected{% endif %}>
+                            PHDHB
+                        </option>
+                    </select>
+                </div>
+                <div class="flex w-full">
+                    <div class="mb-4 w-1/2 mr-1">
+                        <label for="piloot-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Piloot
+                            (kg)</label>
+                        <input type="number" placeholder="Gewicht piloot in kg" min="0" id="piloot-gewicht" {% if pilot
+                            %}value="{{ pilot }}" {% endif %} name="pilot"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            required>
+                    </div>
+                    <div class="mb-4 w-1/2 ml-1"> <label for="pilot-seat"
+                            class="uppercase block text-gray-700 font-bold mb-2">Stoel Positie</label>
+                        <select id="pilot-seat" name="pilot_seat"
+                            class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                            required>
+                            <option value="b" {% if pilot_seat is defined and pilot_seat=="b" %}selected{% endif %}>
+                                Achter
+                            </option>
+                            <option value="m" {% if pilot_seat is defined and pilot_seat=="m" %}selected{% endif %}>
+                                Midden
+                            </option>
+                            <option value="f" {% if pilot_seat is defined and pilot_seat=="f" %}selected{% endif %}>Voor
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="w-full flex">
+                    <div class="mb-4 w-1/2 mr-1">
+                        <label for="passagier-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Passagier
+                            (kg)</label>
+                        <input type="number" min="0" placeholder="Gewicht passagier in kg" id="passagier-gewicht" {% if
+                            passenger %}value="{{ passenger }}" {% endif %} name="passenger"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4 w-1/2 ml-1"> <label for="passenger-seat"
+                            class="uppercase block text-gray-700 font-bold mb-2">Stoel Positie</label>
+                        <select id="passenger-seat" name="passenger_seat"
+                            class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                            required>
+                            <option value="b" {% if passenger_seat is defined and passenger_seat=="b" %}selected{% endif
+                                %}>
+                                Achter</option>
+                            <option value="m" {% if passenger_seat is defined and passenger_seat=="m" %}selected{% endif
+                                %}>
+                                Midden</option>
+                            <option value="f" {% if passenger_seat is defined and passenger_seat=="f" %}selected{% endif
+                                %}>
+                                Voor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="bagage-gewicht" class="uppercase block text-gray-700 font-bold mb-2">bagage (kg, max.
+                        40)</label>
+                    <input type="number" min="0" max="40" placeholder="Gewicht bagage in kg" id="bagage-gewicht" {% if
+                        baggage %}value="{{ baggage }}" {% endif %} name="baggage"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
             </div>
-            <div class="flex w-full">
-                <div class="mb-4 w-1/2 mr-1">
-                    <label for="piloot-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Piloot (kg)</label>
-                    <input type="number" placeholder="Gewicht piloot in kg" min="0" id="piloot-gewicht" {% if pilot
-                        %}value="{{ pilot }}" {% endif %} name="pilot"
+
+            <div class="w-full flex flex-col sm:ml-2">
+                <div class="mb-4">
+                    <label for="oat" class="uppercase block text-gray-700 font-bold mb-2">Buitentemperatuur
+                        (&deg;C)</label>
+                    <input type="number" min="-30" max="40" placeholder="Buitentemperatuur in &deg;C" min="0" id="oat"
+                        name="oat" {% if oat %}value="{{ oat }}" {% endif %}
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         required>
                 </div>
-                <div class="mb-4 w-1/2 ml-1"> <label for="pilot-seat" class="uppercase block text-gray-700 font-bold mb-2">Stoel Positie</label>
-                    <select id="pilot-seat" name="pilot_seat"
-                        class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
-                        required>
-                        <option value="b" {% if pilot_seat is defined and pilot_seat=="b" %}selected{% endif %}>Achter</option>
-                        <option value="m" {% if pilot_seat is defined and pilot_seat=="m" %}selected{% endif %}>Midden</option>
-                        <option value="f" {% if pilot_seat is defined and pilot_seat=="f" %}selected{% endif %}>Voor</option>
-                    </select>
-                </div>
-            </div> 
-            <div class="w-full flex">
-                <div class="mb-4 w-1/2 mr-1">
-                    <label for="passagier-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Passagier (kg)</label>
-                    <input type="number" min="0" placeholder="Gewicht passagier in kg" id="passagier-gewicht" {% if passenger
-                        %}value="{{ passenger }}" {% endif %} name="passenger"
+                <div class="mb-4">
+                    <label for="pressure-altitude" class="uppercase block text-gray-700 font-bold mb-2">Drukhoogte
+                        (Voeten)</label>
+                    <input type="number" min="0" max="8000" placeholder="Drukhoogte in voeten" id="pressure-altitude" {%
+                        if pressure_altitude %}value="{{ pressure_altitude }}" {% endif %} name="pressure_altitude"
+                        required
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
-                <div class="mb-4 w-1/2 ml-1"> <label for="passenger-seat" class="uppercase block text-gray-700 font-bold mb-2">Stoel Positie</label>
-                    <select id="passenger-seat" name="passenger_seat"
-                        class="custom-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
-                        required>
-                        <option value="b" {% if passenger_seat is defined and passenger_seat=="b" %}selected{% endif %}>Achter</option>
-                        <option value="m" {% if passenger_seat is defined and passenger_seat=="m" %}selected{% endif %}>Midden</option>
-                        <option value="f" {% if passenger_seat is defined and passenger_seat=="f" %}selected{% endif %}>Voor</option>
-                    </select>
-                </div>
-            </div>
-            <div class="mb-4">
-                <label for="bagage-gewicht" class="uppercase block text-gray-700 font-bold mb-2">bagage (kg, max. 40)</label>
-                <input type="number" min="0" max="40" placeholder="Gewicht bagage in kg" id="bagage-gewicht" {% if baggage
-                    %}value="{{ baggage }}" {% endif %} name="baggage"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                {% include "wb_form_wind_option.html" %}
             </div>
         </div>
-
-        <div class="w-full flex flex-col sm:ml-2">
-            <div class="mb-4">
-                <label for="brandstof-gewicht" class="uppercase block text-gray-700 font-bold mb-2">Brandstof</label>
-                <div class="flex items-center mb-2">
-                    <input type="checkbox" id="auto-calculate" {% if fuel_option is defined and fuel_option=="auto"
-                        %}checked="checked" {% endif %} name="fuel_option" value="auto"
-                        class="h-5 w-5 text-white bg-indigo-600 border-none rounded focus:ring-indigo-500" hx-get="/fuel-option"
-                        hx-include="[name='fuel_option'],[name='fuel_type'],[name='fuel_quantity_type'],[name='fuel_quantity']"
-                        hx-trigger="change" hx-target="#fuel-option">
-                    <label for="auto-calculate" class="ml-2 block text-gray-700 font-bold">Automatisch Berekenen</label>
-                </div>
-                {% include "wb_form_fuel_option.html" %}
-            </div>
-            <div class="mb-4">
-                <label for="oat" class="uppercase block text-gray-700 font-bold mb-2">Buitentemperatuur (&deg;C)</label>
-                <input type="number" min="-30" max="40" placeholder="Buitentemperatuur in &deg;C" min="0" id="oat" name="oat" {% if oat 
-                %}value="{{ oat }}"{% endif %} class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    required>
-            </div>
-            <div class="mb-4">
-                <label for="pressure-altitude" class="uppercase block text-gray-700 font-bold mb-2">Drukhoogte (Voeten)</label>
-                <input type="number" min="0" max="8000" placeholder="Drukhoogte in voeten" id="pressure-altitude" {% if pressure_altitude 
-                %}value="{{ pressure_altitude }}"{% endif %} name="pressure_altitude" required
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            {% include "wb_form_wind_option.html" %}
+        <div class="mt-4 flex items-center justify-between">
+            <input name="submit" value="Volgende" type="submit"
+                class="w-full bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
         </div>
-    </div>
-    <div class="flex items-center justify-between">
-        <input type="submit" value="Volgende"
-            class="w-full bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-    </div>
-</form>
-
-{% if skip_stepper is undefined %}
-    {% include "stepper.html" %}
-{% endif %}
+    </form>
+</div>
