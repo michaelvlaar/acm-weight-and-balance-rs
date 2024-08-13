@@ -1,7 +1,7 @@
 use core::panic;
 use std::time::Duration;
 
-use actix_web::{http::header::ContentEncoding, web, HttpRequest, HttpResponse, Responder};
+use actix_web::{web, HttpRequest, HttpResponse, Responder};
 use airplane::{
     types::VolumeType,
     visualizer::{WeightBalanceChartVisualization, WeightBalanceTableVisualization},
@@ -54,7 +54,6 @@ pub fn render_calculations(
         app_state.fuel_extra.clone(),
         app_state.fuel_max.unwrap_or_default(),
         app_state.trip_duration.unwrap(),
-        app_state.alternate_duration.unwrap(),
     );
 
     app_state.apply("calculation", ctx);
@@ -902,7 +901,6 @@ pub async fn wb_table(
         app_state.fuel_extra.clone(),
         app_state.fuel_max.unwrap_or_default(),
         app_state.trip_duration.unwrap(),
-        app_state.alternate_duration.unwrap(),
     );
     match airplane::visualizer::weight_and_balance_table(
         plane,
@@ -927,7 +925,6 @@ pub async fn wb_chart(query: web::Query<IndexQueryParams>) -> impl Responder {
         app_state.fuel_extra.clone(),
         app_state.fuel_max.unwrap_or_default(),
         app_state.trip_duration.unwrap(),
-        app_state.alternate_duration.unwrap(),
     );
 
     match airplane::visualizer::weight_and_balance_chart(

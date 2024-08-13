@@ -5,14 +5,6 @@ use airplane::{
     weight_and_balance::{Airplane, CenterOfGravity, LeverArm, Limits, Mass, Moment, Volume},
 };
 
-fn calculate_lever_arm(seat: &str) -> LeverArm {
-    match seat {
-        "f" => LeverArm::Meter(5.0 / 11.0),
-        "m" => LeverArm::Meter(23.0 / 44.0),
-        _ => LeverArm::Meter(13.0 / 22.0),
-    }
-}
-
 pub fn build_plane(
     callsign: String,
     pilot_moment: Moment,
@@ -23,7 +15,6 @@ pub fn build_plane(
     fuel_extra: Option<Mass>,
     fuel_max: bool,
     trip_duration: Duration,
-    alternate_duration: Duration,
 ) -> Airplane {
     let empty_mass = if callsign == "PHDHA" { 517.0 } else { 529.5 };
 
