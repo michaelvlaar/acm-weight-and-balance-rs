@@ -26,12 +26,7 @@ pub async fn index(
 
     let rendered = tmpl.render(template, &ctx).unwrap();
     HttpResponse::Ok()
-        .insert_header(("Link", "<https://unpkg.com/htmx.org@2.0.1>; rel=preload; as=script"))
-        .insert_header(("Link", "<https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css>; rel=preload; as=style"))
-        .insert_header(("Link", "<https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css>; rel=preload; as=style"))
-        .insert_header(("Link", "<https://fonts.googleapis.com/icon?family=Material+Icons>; rel=preload; as=style"))
-        .insert_header(("Link", "<https://cdn.jsdelivr.net/npm/flatpickr>; rel=preload; as=script"))
-        .insert_header(("Link", "<data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%221em%22 font-size=%2280%22>&#128747;</text></svg>>; rel=preload; as=image"))        .content_type("text/html")
+        .insert_header(("Link", "</assets/htmx.min.js>; rel=preload; as=script"))
         .body(rendered)
 }
 
