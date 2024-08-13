@@ -1,4 +1,31 @@
-# [](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.14...v) (2024-08-12)
+# [](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.17...v) (2024-08-13)
+
+
+
+## [0.1.17](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.16...v0.1.17) (2024-08-13)
+
+
+### Bug Fixes
+
+* refactored code and removed unused code ([0ac3c07](https://github.com/michaelvlaar/acm-weight-and-balance-rs/commit/0ac3c07170fe7fe0d99333464285c79180c2b29a))
+
+
+
+## [0.1.16](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.15...v0.1.16) (2024-08-13)
+
+
+### Features
+
+* HTTP/2 htmx javascript push on index ([fadb1a5](https://github.com/michaelvlaar/acm-weight-and-balance-rs/commit/fadb1a5886f29a0df0a8c1272da91720f56a3e4d))
+
+
+
+## [0.1.15](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.14...v0.1.15) (2024-08-13)
+
+
+### Features
+
+* HTTP/2 link header for static resources ([8457911](https://github.com/michaelvlaar/acm-weight-and-balance-rs/commit/8457911bedb909670802f970cf66b87d78408013))
 
 
 
