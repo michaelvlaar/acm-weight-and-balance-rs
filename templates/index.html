@@ -1,72 +1,86 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <meta charset="UTF-8">
     <title>Berekeningen Aquila A210</title>
     <script defer src="/assets/htmx.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%221em%22 font-size=%2280%22>&#128747;</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%221em%22 font-size=%2280%22>&#128747;</text></svg>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
     <style>
         @media print {
             .no-print {
-              display: none !important;
+                display: none !important;
             }
+
             body {
-              margin: 20mm;
-              font-size: 12pt;
+                margin: 20mm;
+                font-size: 12pt;
             }
-          }
+        }
+
         .custom-select {
             appearance: none;
             background-color: #fff;
             border: 1px solid #ccc;
-            padding-right: 2.5rem; /* Room for the arrow */
+            padding-right: 2.5rem;
+            /* Room for the arrow */
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
             background-repeat: no-repeat;
             background-position: right 0.5rem center;
             background-size: 1.5rem;
         }
+
         .vertical-center {
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         .table-row:hover {
             background-color: #f0f0f0;
             cursor: pointer;
         }
 
-        #callsign-phdha:checked ~ div {
-          --tw-translate-x: 0%;
+        #callsign-phdha:checked~div {
+            --tw-translate-x: 0%;
         }
 
-        #callsign-phdhb:checked ~ div {
-          --tw-translate-x: 100%;
+        #callsign-phdhb:checked~div {
+            --tw-translate-x: 100%;
         }
     </style>
 </head>
+
 <body class="bg-white">
     <header class="bg-indigo-600 text-white fixed w-full top-0 z-50">
         <div class="max-w-7xl mx-auto px-2">
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <div class="ml-2 flex items-center">
-                        <span class="text-lg font-semibold uppercase">&#128747; Berekeningen Aquila A210</span>
+                        <span class="text-lg font-semibold uppercase">&#128747; Berekeningen</span>
                     </div>
+                </div>
+                <div class="flex items-center">
+                    <a target="_blank" href="https://www.pay.nl/doneren/SL-8940-9333/0Lc03af/?amount_min=100&amount=500"
+                        class="flex items-center bg-indigo-500 text-white font-semibold py-2 px-4 rounded hover:bg-indigo-400 transition duration-300 ease-in-out no-print">
+                         <span class="material-icons mr-2">favorite</span> Doneer
+                    </a>
                 </div>
             </div>
         </div>
     </header>
     <main class="max-w-7xl mx-auto mt-16 p-4">
         <div class="flex flex-col lg:items-stretch w-full" id="#main">
-                {% include "wb_form.html" %}
+            {% include "wb_form.html" %}
         </div>
     </main>
-    
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
-</html>
 
+</html>

@@ -63,10 +63,9 @@ jobs:
       run: |
         export README_CONTENT=$(cat README.md)
         export PAYLOAD=$(echo '{}' | jq --arg msg "$README_CONTENT" '. += { "full_description": $msg }')
-        curl -s -X PATCH https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/acm_weight_and_balance/ \
-        -H "Authorization: Bearer ${{ secrets.DOCKER_TOKEN }}" \
-        -H "Content-Type: application/json" \
-        -d "$PAYLOAD"
-
+          curl -s -X PATCH https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/acm_weight_and_balance/ \
+          -u "${{ secrets.DOCKER_USERNAME }}:${{ secrets.DOCKER_PASSWORD }}" \
+          -H "Content-Type: application/json" \
+          -d "$PAYLOAD"
     - name: Logout from Docker Hub
       run: docker logout
