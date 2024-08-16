@@ -1,4 +1,13 @@
-# [](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.17...v) (2024-08-13)
+# [](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.18...v) (2024-08-13)
+
+
+
+## [0.1.18](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.17...v0.1.18) (2024-08-13)
+
+
+### Features
+
+* changed donation screen to pay.nl ([c5c8a3e](https://github.com/michaelvlaar/acm-weight-and-balance-rs/commit/c5c8a3ea8b80de4eb66609d955349fe306b4ac3b))
 
 
 
