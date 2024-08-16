@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acm-weight-and-balance
+  labels:
+    app: acm-weight-and-balance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acm-weight-and-balance
+  template:
+    metadata:
+      labels:
+        app: acm-weight-and-balance
+    spec:
+      containers:
+      - name: acm-weight-and-balance
+        image: michaelvlaar/acm_weight_and_balance:0.1.18
+        ports:
+        - containerPort: 80 
+        resources:
+          limits:
+            memory: "50Mi"
+            cpu: "50m"
