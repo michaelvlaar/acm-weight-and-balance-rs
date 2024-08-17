@@ -4,6 +4,8 @@ metadata:
   name: acm-weight-and-balance
   labels:
     app: acm-weight-and-balance
+  annotations:
+    linkerd.io/inject: enabled
 spec:
   replicas: 1
   selector:
