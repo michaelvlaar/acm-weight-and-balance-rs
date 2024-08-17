@@ -19,6 +19,7 @@ spec:
         image: michaelvlaar/acm_weight_and_balance:0.1.18
         ports:
         - containerPort: 80 
+          name: http
         resources:
           limits:
             memory: "50Mi"
