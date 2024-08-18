@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: acm-weight-and-balance
+      annotations:
+        linkerd.io/inject: "enabled"
     spec:
       containers:
       - name: acm-weight-and-balance
