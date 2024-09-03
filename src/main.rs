@@ -6,6 +6,7 @@ use actix_web::{web, App, HttpServer, HttpRequest, HttpResponse, Responder};
 use rust_embed::RustEmbed;
 use tera::Tera;
 use mime_guess::from_path;
+use tokio;
 
 #[derive(RustEmbed)]
 #[folder = "templates/"]
@@ -30,6 +31,10 @@ async fn serve_asset(req: HttpRequest) -> impl Responder {
     }
 }
 
+async fn health_check() -> impl Responder {
+    HttpResponse::Ok().body("OK")
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let mut tera = Tera::default();
@@ -40,13 +45,23 @@ async fn main() -> std::io::Result<()> {
         }
     }
 
-    HttpServer::new(move || {
+    let tera_clone = tera.clone();
+
+    let main_server = HttpServer::new(move || {
         App::new()
-            .app_data(web::Data::new(tera.clone()))
-            .configure(routes::init)
+            .app_data(web::Data::new(tera_clone.clone()))
             .route("/assets/{filename:.*}", web::get().to(serve_asset))
+            .configure(routes::init)
     })
-    .bind("0.0.0.0:80")?
-    .run()
-    .await
+    .bind("0.0.0.0:80")?;
+
+    // Health check server
+    let health_server = HttpServer::new(|| {
+        App::new()
+            .route("/healthz", web::get().to(health_check))
+    })
+    .bind("0.0.0.0:8081")?; // Different port for health checks
+
+    tokio::try_join!(main_server.run(), health_server.run())?;
+    Ok(())
 }

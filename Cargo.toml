@@ -1,6 +1,6 @@
 [package]
 name = "acm_weight_and_balance"
-version = "0.1.18"
+version = "0.1.19"
 edition = "2021"
 
 [dependencies]
@@ -10,3 +10,4 @@ tera = "1.12"
 serde = { version = "1.0", features = ["derive"] }
 rust-embed = "6.3.0"
 mime_guess = "2.0"
+tokio = { version = "1", features = ["full"] }
