@@ -19,11 +19,25 @@ spec:
       serviceAccountName: acm-weight-and-balance
       containers:
       - name: acm-weight-and-balance
-        image: michaelvlaar/acm_weight_and_balance:0.1.18
+        image: michaelvlaar/acm_weight_and_balance:0.1.19
         ports:
         - containerPort: 80 
           name: http
+        - containerPort: 8081 
+          name: health-http
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: health-http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: health-http
+          initialDelaySeconds: 5
+          periodSeconds: 10
         resources:
           limits:
             memory: "50Mi"
-            cpu: "50m"
+            cpu: "10m"
