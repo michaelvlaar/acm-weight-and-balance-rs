@@ -1,4 +1,9 @@
-# [](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.18...v) (2024-08-13)
+# [](https://github.com/michaelvlaar/acm-weight-and-balance-rs/compare/v0.1.19...v) (2024-09-03)
+
+
+### Features
+
+* health probe on :8081/healthz ([b6ad195](https://github.com/michaelvlaar/acm-weight-and-balance-rs/commit/b6ad195c902284e0a6dcfc08a6ba958a88cd7b6d))
 
 
 
